@@ -129,6 +129,7 @@
   .feature .links a:hover { border-color: var(--fg); }
   .install { min-width: 300px; }
   .install h4 { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--faint); text-transform: uppercase; margin: 0 0 10px; font-weight: 500; }
+  .install .ib + .ib { margin-top: 16px; }
   pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 9px; padding: 14px 15px; overflow-x: auto; }
   code { font-family: var(--mono); font-size: 12.5px; line-height: 1.85; color: var(--fg); }
   code .c { color: var(--faint); }
@@ -206,7 +207,7 @@
       <div>
         <span class="eyebrow">Open source</span>
         <h1>Open-source tools for agent observability.</h1>
-        <p class="lede">Free plugins, skills, and getting-started templates that connect Claude Code and GitHub Copilot to the Progress Observability Platform — so your agent can debug traces, watch spend, and build evals over MCP, right where you code.</p>
+        <p class="lede">Plugins, skills, and getting-started templates that connect Claude Code and GitHub Copilot to the Progress Observability Platform — read traces, track cost, and build evals over MCP, from your coding agent.</p>
         <div class="cta-row">
           <a class="btn primary" href="#start">Get started</a>
           <a class="btn ghost" href="https://github.com/observability-oss" target="_blank" rel="noopener">
@@ -218,7 +219,7 @@
 
       <div class="launch">
         <div class="launch-top">
-          <span class="eyebrow">Start in seconds</span>
+          <span class="eyebrow">Install</span>
           <div class="segmented" role="tablist" aria-label="Choose how to run it">
             <button class="seg active" role="tab" aria-selected="true" data-tab="claude" type="button">Claude Code</button>
             <button class="seg" role="tab" aria-selected="false" data-tab="copilot" type="button">Copilot</button>
@@ -252,8 +253,8 @@
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">What's here</span>
-        <h2>The flagship plugin</h2>
-        <p>One read-only MCP connection to the Progress Observability Platform, four workflows on top of it. Install once in Claude Code, or copy the Copilot setup.</p>
+        <h2>The toolkit</h2>
+        <p>One read-only MCP connection to the Progress Observability Platform, four workflows on top of it — shipped from a single source as a Claude Code plugin and a VS Code / Copilot setup, so the same skills run in either.</p>
       </div>
 
       <div class="feature">
@@ -261,9 +262,10 @@
           <div>
             <div class="repo-name">
               progress-observability
-              <span class="tagpill">plugin</span>
+              <span class="tagpill">Claude Code</span>
+              <span class="tagpill">Copilot</span>
             </div>
-            <p class="desc">Observe, debug, cost-manage, and evaluate AI systems from your coding agent. Trace triage, cost reports, eval coverage gaps, and research-grounded LLM-as-a-Judge eval generation.</p>
+            <p class="desc">Four read-only workflows over the Progress Observability MCP server: trace triage, cost and usage reports, eval coverage gaps, and LLM-as-a-Judge eval generation grounded in your real traces.</p>
             <div class="chips">
               <span class="chip">/trace-triage</span>
               <span class="chip">/cost-report</span>
@@ -276,11 +278,17 @@
             </div>
           </div>
           <div class="install">
-            <h4>Install · Claude Code</h4>
-            <pre><code>/plugin marketplace add \
+            <div class="ib">
+              <h4>Claude Code</h4>
+              <pre><code>/plugin marketplace add \
   observability-oss/progress-observability-plugin
-/plugin install \
-  progress-observability</code></pre>
+/plugin install progress-observability</code></pre>
+            </div>
+            <div class="ib">
+              <h4>VS Code · Copilot</h4>
+              <pre><code>cp -r copilot/.vscode copilot/.github your-repo/
+<span class="c"># mcp.json, prompts, and instructions — then reload</span></code></pre>
+            </div>
           </div>
         </div>
       </div>
@@ -307,8 +315,8 @@
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">How it fits</span>
-        <h2>Observe, find the gap, build the eval, keep the bill honest</h2>
-        <p>The four skills chain into one loop — no other tool packages this end to end.</p>
+        <h2>Triage a failure, find the gap, build the eval, track the cost</h2>
+        <p>The four skills chain into one loop — each stage's output is the next stage's input.</p>
       </div>
       <div class="loop">
         <div class="stage"><div class="n">01</div><div class="t">trace-triage</div><p>A run fails. Find the failure signature in the spans.</p></div>
@@ -338,7 +346,7 @@
       <div class="sec-head">
         <span class="eyebrow">More, soon</span>
         <h2>Getting-started templates <span class="soon">Coming soon</span></h2>
-        <p>Starter repos pre-wired for observability — drop in your keys and ship your first traced agent. Landing here as they're published.</p>
+        <p>Starter repos pre-wired for observability — clone, add your keys, and you have a traced agent to build on. Listed here as they're published.</p>
       </div>
     </div>
   </section>
