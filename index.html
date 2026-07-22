@@ -90,20 +90,24 @@
   .lede { color: var(--muted); font-size: 16.5px; max-width: 46ch; margin: 18px 0 0; letter-spacing: -0.01em; }
   .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
 
-  /* trace card — clean, monochrome */
-  .scope { background: var(--card); border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; }
-  .scope-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid var(--line); }
-  .scope-top .t { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
-  .scope-top .d { font-family: var(--mono); font-size: 11px; color: var(--faint); }
-  .waterfall { padding: 15px; display: flex; flex-direction: column; gap: 11px; }
-  .row { display: grid; grid-template-columns: 118px 1fr; align-items: center; gap: 14px; }
-  .row .lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .track { position: relative; height: 8px; }
-  .span { position: absolute; top: 0; height: 8px; border-radius: 2px; background: var(--fill); }
-  .span.hi { background: var(--hi); }
-  .scope-foot { display: flex; gap: 7px; padding: 4px 15px 16px; }
-  .tag { font-family: var(--mono); font-size: 10.5px; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line-2); color: var(--muted); }
-  .tag.solid { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  /* hero launch card — compact, all three ways to run */
+  .launch { background: var(--card); border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; }
+  .launch-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .launch-top .eyebrow { font-size: 11px; }
+  .segmented { display: inline-flex; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 3px; gap: 2px; }
+  .seg { font-family: var(--mono); font-size: 11.5px; color: var(--muted); background: transparent; border: 0; cursor: pointer; padding: 5px 9px; border-radius: 6px; letter-spacing: -0.01em; }
+  .seg:hover { color: var(--fg); }
+  .seg.active { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.07); }
+  .launch-body { padding: 15px 15px 17px; }
+  .pane { display: flex; flex-direction: column; gap: 13px; }
+  .pane[hidden] { display: none; }
+  .pstep { display: grid; grid-template-columns: 18px 1fr; gap: 11px; align-items: start; }
+  .pstep .pn { font-family: var(--mono); font-size: 11px; color: var(--faint); line-height: 1.65; }
+  .pstep .pt { font-size: 13px; color: var(--muted); letter-spacing: -0.005em; }
+  .pstep .pt .dim { color: var(--faint); }
+  .pane pre { margin-top: 8px; padding: 10px 12px; }
+  .pane code { font-size: 12px; line-height: 1.7; }
+  .icode { font-family: var(--mono); font-size: 12px; color: var(--fg); background: var(--code-bg); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
 
   /* sections */
   section { padding: 72px 0; }
@@ -212,22 +216,33 @@
         </div>
       </div>
 
-      <div class="scope" aria-hidden="true">
-        <div class="scope-top">
-          <span class="t">trace · checkout-agent</span>
-          <span class="d">1,284ms</span>
+      <div class="launch">
+        <div class="launch-top">
+          <span class="eyebrow">Start in seconds</span>
+          <div class="segmented" role="tablist" aria-label="Choose how to run it">
+            <button class="seg active" role="tab" aria-selected="true" data-tab="claude" type="button">Claude Code</button>
+            <button class="seg" role="tab" aria-selected="false" data-tab="copilot" type="button">Copilot</button>
+            <button class="seg" role="tab" aria-selected="false" data-tab="skill" type="button">One skill</button>
+          </div>
         </div>
-        <div class="waterfall">
-          <div class="row"><span class="lbl">handle_request</span><span class="track"><span class="span" style="left:0;width:98%"></span></span></div>
-          <div class="row"><span class="lbl">retrieve_docs</span><span class="track"><span class="span" style="left:6%;width:34%"></span></span></div>
-          <div class="row"><span class="lbl">plan_step</span><span class="track"><span class="span" style="left:40%;width:14%"></span></span></div>
-          <div class="row"><span class="lbl">tool · charge_card</span><span class="track"><span class="span hi" style="left:54%;width:38%"></span></span></div>
-          <div class="row"><span class="lbl">format_reply</span><span class="track"><span class="span" style="left:92%;width:7%"></span></span></div>
-        </div>
-        <div class="scope-foot">
-          <span class="tag">200 ok</span>
-          <span class="tag solid">tool_call · slow</span>
-          <span class="tag">5 spans</span>
+        <div class="launch-body">
+          <div class="pane" role="tabpanel" data-pane="claude">
+            <div class="pstep"><span class="pn">1</span><div class="pt">Set your MCP key <span class="dim">(Progress Observability → API Keys)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Add the plugin and install<pre><code>/plugin marketplace add \
+  observability-oss/progress-observability-plugin
+/plugin install progress-observability</code></pre></div></div>
+            <div class="pstep"><span class="pn">3</span><div class="pt">Ask in plain language<pre><code><span class="c">"why did checkout-agent stall?"</span></code></pre></div></div>
+          </div>
+          <div class="pane" role="tabpanel" data-pane="copilot" hidden>
+            <div class="pstep"><span class="pn">1</span><div class="pt">Set your MCP key <span class="dim">(same env var)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Copy <span class="icode">copilot/</span> into your repo <span class="dim">— <span class="icode">.vscode/mcp.json</span>, <span class="icode">.github/</span> prompts + instructions</span></div></div>
+            <div class="pstep"><span class="pn">3</span><div class="pt">Run a prompt in Copilot Chat<pre><code>/trace-triage</code></pre></div></div>
+          </div>
+          <div class="pane" role="tabpanel" data-pane="skill" hidden>
+            <div class="pstep"><span class="pn">1</span><div class="pt">Set your MCP key <span class="dim">(same env var)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Drop one skill folder into <span class="icode">.claude/skills/</span> <span class="dim">— or hand it to any agent</span></div></div>
+            <div class="pstep"><span class="pn">3</span><div class="pt">Invoke it directly<pre><code>/cost-report</code></pre></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -373,6 +388,22 @@
       var next = current() === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+  })();
+
+  (function () {
+    var segs = Array.prototype.slice.call(document.querySelectorAll(".seg"));
+    var panes = Array.prototype.slice.call(document.querySelectorAll(".pane"));
+    segs.forEach(function (s) {
+      s.addEventListener("click", function () {
+        var t = s.getAttribute("data-tab");
+        segs.forEach(function (x) {
+          var on = x === s;
+          x.classList.toggle("active", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        panes.forEach(function (p) { p.hidden = p.getAttribute("data-pane") !== t; });
+      });
     });
   })();
 </script>
