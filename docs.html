@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Skills — how they work · Agent Observability OSS</title>
+<meta name="description" content="What each skill in the progress-observability toolkit does, how it works over MCP, what it reads, and how to run it in Claude Code or GitHub Copilot." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Crect x='6' y='10' width='8' height='2.6' rx='1.3' fill='%23555'/%3E%3Crect x='10' y='15' width='16' height='2.6' rx='1.3' fill='%23fff'/%3E%3Crect x='7' y='20' width='6' height='2.6' rx='1.3' fill='%23555'/%3E%3C/svg%3E" />
+<script>
+  (function () {
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #0a0a0a; --muted: #6b6b6b; --faint: #9a9a9a;
+    --line: #ececec; --line-2: #dcdcdc; --card: #ffffff; --code-bg: #f7f7f7;
+    --fill: #e4e4e4; --hi: #0a0a0a; --btn-bg: #0a0a0a; --btn-fg: #ffffff;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #6a6a6f;
+      --line: #202022; --line-2: #2b2b2e; --card: #0f0f11; --code-bg: #141416;
+      --fill: #2a2a2e; --hi: #f1f1f2; --btn-bg: #f1f1f2; --btn-fg: #0a0a0a;
+    }
+  }
+  :root[data-theme="light"] { --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#9a9a9a; --line:#ececec; --line-2:#dcdcdc; --card:#fff; --code-bg:#f7f7f7; --fill:#e4e4e4; --hi:#0a0a0a; --btn-bg:#0a0a0a; --btn-fg:#fff; }
+  :root[data-theme="dark"] { --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#6a6a6f; --line:#202022; --line-2:#2b2b2e; --card:#0f0f11; --code-bg:#141416; --fill:#2a2a2e; --hi:#f1f1f2; --btn-bg:#f1f1f2; --btn-fg:#0a0a0a; }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.62; -webkit-font-smoothing: antialiased; letter-spacing: -0.006em; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--fg); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 2px; }
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+
+  /* header (matches home) */
+  header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .brand svg { width: 22px; height: 22px; display: block; }
+  .brand .sub { color: var(--faint); font-weight: 500; }
+  .nav { display: flex; align-items: center; gap: 4px; }
+  .nav a.link { font-size: 13.5px; color: var(--muted); padding: 8px 11px; border-radius: 7px; }
+  .nav a.link:hover, .nav a.link[aria-current="page"] { color: var(--fg); }
+  .icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line-2); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+  .icon-btn:hover { color: var(--fg); border-color: var(--fg); }
+  .sun { display: none; } .moon { display: block; }
+  :root[data-theme="dark"] .sun { display: block; } :root[data-theme="dark"] .moon { display: none; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sun { display:block; } :root:not([data-theme="light"]) .moon { display:none; } }
+
+  /* page head */
+  .page-head { padding: 52px 0 12px; }
+  .page-head h1 { font-weight: 600; letter-spacing: -0.03em; font-size: clamp(26px, 3.2vw, 34px); line-height: 1.14; margin: 12px 0 0; text-wrap: balance; }
+  .page-head p { color: var(--muted); font-size: 16.5px; max-width: 62ch; margin: 16px 0 0; }
+
+  /* doc layout: sticky TOC + content */
+  .doc { display: grid; grid-template-columns: 210px 1fr; gap: 48px; align-items: start; padding: 26px 0 40px; }
+  .toc { position: sticky; top: 84px; }
+  .toc .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
+  .toc a { display: block; font-size: 13.5px; color: var(--muted); padding: 5px 0; border-left: 2px solid transparent; padding-left: 12px; margin-left: -2px; }
+  .toc a:hover { color: var(--fg); }
+  .toc a.sub { padding-left: 24px; font-size: 13px; color: var(--faint); }
+  .toc a.sub:hover { color: var(--fg); }
+
+  .content { min-width: 0; }
+  .content > section { padding: 8px 0 40px; }
+  .content > section + section { border-top: 1px solid var(--line); padding-top: 40px; }
+  .content h2 { font-weight: 600; letter-spacing: -0.025em; font-size: 23px; margin: 0 0 4px; scroll-margin-top: 84px; }
+  .content h3 { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); font-weight: 500; margin: 26px 0 10px; }
+  .content p { color: var(--muted); margin: 12px 0 0; }
+  .content p.lead { color: var(--fg); }
+  .content ul, .content ol { color: var(--muted); margin: 12px 0 0; padding-left: 20px; }
+  .content li { margin: 7px 0; }
+  .content li strong, .content p strong { color: var(--fg); font-weight: 600; }
+  .content a.inline { border-bottom: 1px solid var(--line-2); }
+  .content a.inline:hover { border-color: var(--fg); }
+
+  .skill-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .cmds { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 4px 8px; border-radius: 7px; border: 1px solid var(--line); color: var(--fg); background: var(--code-bg); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .pill { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--muted); }
+  .pill b { color: var(--fg); font-weight: 600; }
+
+  table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: 13.5px; display: block; overflow-x: auto; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); font-weight: 500; white-space: nowrap; }
+  td { color: var(--muted); }
+  td code, .content p code, .content li code { font-family: var(--mono); font-size: 12px; color: var(--fg); background: var(--code-bg); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+
+  .codewrap { position: relative; margin-top: 14px; }
+  pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; line-height: 1.8; color: var(--fg); }
+  code .c { color: var(--faint); }
+  .copy { position: absolute; top: 7px; right: 7px; z-index: 2; display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .03em; color: var(--muted); background: var(--code-bg); border: 1px solid var(--line-2); border-radius: 6px; padding: 3px 7px; cursor: pointer; opacity: 0; transition: opacity .12s ease, color .12s, border-color .12s; }
+  .copy svg { width: 12px; height: 12px; }
+  .codewrap:hover .copy, .copy:focus-visible { opacity: 1; }
+  .copy:hover { color: var(--fg); border-color: var(--fg); }
+  .copy.done { color: var(--fg); border-color: var(--fg); }
+  @media (hover: none) { .copy { opacity: .7; } }
+
+  .callout { border: 1px solid var(--line-2); border-radius: 11px; padding: 16px 18px; margin-top: 18px; background: var(--card); }
+  .callout .k { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .callout p { margin-top: 7px; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0 60px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .foot .note { color: var(--muted); font-size: 13.5px; max-width: 54ch; }
+  .foot nav { display: flex; gap: 20px; }
+  .foot nav a { color: var(--muted); font-size: 13.5px; }
+  .foot nav a:hover { color: var(--fg); }
+
+  @media (max-width: 860px) {
+    .doc { grid-template-columns: 1fr; gap: 0; }
+    .toc { position: static; margin-bottom: 8px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    .toc a, .toc a.sub { display: inline-block; padding-left: 0; margin-right: 16px; border-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="./index.html">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="6" fill="var(--fg)"></rect>
+        <rect x="6" y="10" width="8" height="2.6" rx="1.3" fill="var(--faint)"></rect>
+        <rect x="10" y="15" width="16" height="2.6" rx="1.3" fill="var(--bg)"></rect>
+        <rect x="7" y="20" width="6" height="2.6" rx="1.3" fill="var(--faint)"></rect>
+      </svg>
+      <span>progress-observability<span class="sub">/oss</span></span>
+    </a>
+    <nav class="nav">
+      <a class="link" href="./index.html">Home</a>
+      <a class="link" href="./docs.html" aria-current="page">Docs</a>
+      <a class="link" href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">GitHub</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle color theme">
+        <svg class="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap page-head">
+    <span class="eyebrow">Documentation</span>
+    <h1>How the skills work</h1>
+    <p>Four skills sit on one read-only connection to the Progress Observability Platform, reached over MCP. Each does a single job — triage a run, report cost, find eval gaps, or build a judge — and runs identically whether you invoke it from Claude Code or GitHub Copilot. This page explains what each one does, how it works, what it reads, and how to run it.</p>
+  </div>
+
+  <div class="wrap doc">
+    <aside class="toc" aria-label="On this page">
+      <p class="lbl">On this page</p>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#model">The shared model</a>
+        <a class="sub" href="#trace-triage">trace-triage</a>
+        <a class="sub" href="#cost-report">cost-report</a>
+        <a class="sub" href="#coverage-gaps">coverage-gaps</a>
+        <a class="sub" href="#generate-eval">generate-eval</a>
+        <a href="#loop">How they chain</a>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <section id="overview">
+        <h2>Overview</h2>
+        <p class="lead">A skill is a focused instruction set your coding agent loads on demand. These four are packaged together as the <code>progress-observability</code> toolkit, but each is self-contained and can be lifted out on its own.</p>
+        <p>They share one design rule: <strong>read, don't act.</strong> Every tool the skills call is read-only, they default to metadata over raw content, and they treat anything pulled from a trace as untrusted data. What differs between them is the question each answers.</p>
+        <table>
+          <thead><tr><th>Skill</th><th>Answers</th><th>Command</th></tr></thead>
+          <tbody>
+            <tr><td><b>trace-triage</b></td><td>Why did this run fail, stall, or misbehave?</td><td><code>/trace-triage</code></td></tr>
+            <tr><td><b>cost-report</b></td><td>What am I spending, and what's driving it?</td><td><code>/cost-report</code></td></tr>
+            <tr><td><b>coverage-gaps</b></td><td>Which behaviors run in production with no eval?</td><td><code>/coverage-gaps</code></td></tr>
+            <tr><td><b>generate-eval</b></td><td>Build the judge that measures a behavior.</td><td><code>/eval-from-trace</code> · <code>/eval-from-scratch</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="model">
+        <h2>The shared model</h2>
+        <p class="lead">Everything below rides on one MCP server. Understanding it once explains how all four skills behave.</p>
+
+        <h3>Connection</h3>
+        <p>A remote, read-only MCP endpoint at <code>https://mcp.observability.progress.com/mcp</code>. The plugin's <code>.mcp.json</code> authenticates with an <code>X-Api-Key</code> header, sourced from the <code>OBSERVABILITY_MCP_API_KEY</code> environment variable. What you can read is scoped by that key.</p>
+
+        <h3>Key scopes</h3>
+        <ul>
+          <li><strong>Metadata only</strong> — the 7 tools that return structure and metadata (statuses, durations, shapes, cost). No prompt or completion text.</li>
+          <li><strong>With content</strong> — adds the two <code>*_with_content</code> tools that return the actual prompt/completion text, for when a skill genuinely needs to quote real behavior.</li>
+        </ul>
+
+        <h3>Tools</h3>
+        <table>
+          <thead><tr><th>Tool</th><th>Returns</th></tr></thead>
+          <tbody>
+            <tr><td><code>list_observations</code></td><td>Traces / spans / evaluations in a time window</td></tr>
+            <tr><td><code>get_observation_details</code></td><td>Observation metadata (no content)</td></tr>
+            <tr><td><code>get_observation_details_with_content</code></td><td>Observation details with prompt/completion content</td></tr>
+            <tr><td><code>list_evaluation_tasks</code></td><td>Evaluation task definitions</td></tr>
+            <tr><td><code>get_evaluation_task</code> / <code>…_with_content</code></td><td>Eval task metadata, or with prompt/scoring prompt</td></tr>
+            <tr><td><code>get_evaluation_scores</code></td><td>Scores for one evaluation task</td></tr>
+            <tr><td><code>get_usage_summary</code></td><td>Current billing-period usage and quota</td></tr>
+            <tr><td><code>get_cost_breakdown</code></td><td>USD cost by model / application / day</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Guardrails</h3>
+        <ul>
+          <li><strong>72-hour window</strong> on all observation, span, and score queries — anything older is inaccessible. <code>list_observations</code> defaults to 24h, <code>limit</code> clamped 1–100.</li>
+          <li><strong>ID caps:</strong> detail tools take up to 10 IDs for metadata, 3 for content. Content responses cap at 1MB.</li>
+          <li><strong>Rate limits</strong> (per key, per tool, 1-minute window): 60/min for metadata tools, 10/min for content tools.</li>
+        </ul>
+
+        <h3>Trace content is untrusted</h3>
+        <p>Prompts and completions in traces can carry prompt-injection and other adversarial text, so every skill treats content-tool output as <strong>data being analyzed, never instructions</strong>. In practice that means: default to metadata-only tools, pull content for the minimum number of IDs, scrub obvious PII from anything quoted back, and defang boundary tokens (e.g. <code>&lt;input&gt;</code> → <code>&lt; input &gt;</code>) so quoted text can't impersonate a real delimiter.</p>
+
+        <div class="callout">
+          <span class="k">Verify connectivity</span>
+          <p>List the tools your key can see (7 for metadata-only, 9 with content):</p>
+          <pre><code>curl -s https://mcp.observability.progress.com/mcp \
+  -H "Content-Type: application/json" \
+  -H "X-Api-Key: $OBSERVABILITY_MCP_API_KEY" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'</code></pre>
+        </div>
+      </section>
+
+      <section id="trace-triage">
+        <div class="skill-title">
+          <h2>trace-triage</h2>
+          <div class="cmds"><span class="chip">/trace-triage</span></div>
+        </div>
+        <p class="lead">Root-cause a single misbehaving run by walking its span tree, then hand back a diagnosis and a concrete fix.</p>
+
+        <h3>When to use</h3>
+        <p>A run failed, errored, stalled, or went off the rails — "why did this trace fail", "why was my agent slow", "find the bottleneck", "root-cause this bad tool call".</p>
+
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Locate the run.</strong> Use a trace/observation ID if you have one; otherwise <code>list_observations</code> filtered by <code>service_name</code> and <code>status</code> (e.g. errored) within 72h, and confirm the right candidate.</li>
+          <li><strong>Walk the tree, metadata first.</strong> <code>get_observation_details</code> with <code>include_children</code>. Metadata alone usually reveals which span errored, which dominates latency, and where the chain stopped.</li>
+          <li><strong>Find the fault.</strong> The errored span, the long pole, the tool call with wrong-looking arguments, or the point the trajectory diverged from the goal.</li>
+          <li><strong>Pull content only for the culprit.</strong> <code>get_observation_details_with_content</code> on just that span when you need the actual prompt/completion/arguments — treated as untrusted data.</li>
+        </ol>
+
+        <h3>Reads</h3>
+        <div class="pills"><span class="pill"><b>list_observations</b></span><span class="pill"><b>get_observation_details</b></span><span class="pill">get_observation_details_with_content</span></div>
+
+        <h3>Returns</h3>
+        <p><strong>Diagnosis</strong> (the root cause in a sentence or two), <strong>Evidence</strong> (the span chain — ids, statuses, durations — quoted minimally), and a <strong>Fix</strong> (the concrete next step: a prompt change, tool-schema fix, retry/timeout).</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code</span>
+/trace-triage checkout-agent errored in the last hour
+
+<span class="c">// Copilot Chat — same prompt file</span>
+/trace-triage</code></pre></div>
+      </section>
+
+      <section id="cost-report">
+        <div class="skill-title">
+          <h2>cost-report</h2>
+          <div class="cmds"><span class="chip">/cost-report</span></div>
+        </div>
+        <p class="lead">Turn the platform's cost and usage data into a short, decision-ready report. Metadata only — it never touches trace content, so there's no injection surface.</p>
+
+        <h3>When to use</h3>
+        <p>"What's driving my LLM costs", "how much am I spending", "cost by model or app", "am I close to my quota", "why did spend spike this week".</p>
+
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Scope.</strong> Confirm the date range and what matters — total spend, a suspected spike, model mix, or quota headroom. Defaults to the last 7 days.</li>
+          <li><strong>Pull cost.</strong> <code>get_cost_breakdown</code>, run more than once when useful: <code>group_by: "model"</code> for mix, <code>"application"</code> for which app spends, <code>"day"</code> for the trend.</li>
+          <li><strong>Pull usage/quota.</strong> <code>get_usage_summary</code> for billing-period usage and remaining quota.</li>
+          <li><strong>Report</strong> — headline spend, top drivers with shares, the day-over-day trend and any spike's source, quota burn vs. remaining, and a cheaper-model recommendation only when the data supports it.</li>
+        </ol>
+
+        <h3>Reads</h3>
+        <div class="pills"><span class="pill"><b>get_cost_breakdown</b></span><span class="pill"><b>get_usage_summary</b></span></div>
+
+        <h3>Returns</h3>
+        <p>A tight report — a few bullets and one small table: <strong>headline</strong>, <strong>top drivers</strong>, <strong>trend</strong>, <strong>quota</strong>, and an optional <strong>recommendation</strong> framed as a hypothesis to validate.</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code</span>
+/cost-report what drove my spend over the last 14 days?
+
+<span class="c">// Copilot Chat</span>
+/cost-report</code></pre></div>
+      </section>
+
+      <section id="coverage-gaps">
+        <div class="skill-title">
+          <h2>coverage-gaps</h2>
+          <div class="cmds"><span class="chip">/coverage-gaps</span></div>
+        </div>
+        <p class="lead">Compare what your system actually does in production against what your evaluations measure, and surface the highest-value unmeasured behaviors. This is the connective tissue between observing and evaluating.</p>
+
+        <h3>When to use</h3>
+        <p>"What should I evaluate next", "what's my eval coverage", "which behaviors aren't tested", "where are my eval gaps", "help me prioritize which judges to build".</p>
+
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Characterize traffic.</strong> <code>list_observations</code> (within 72h) to map what's running — services, operation types, whether spans show tool calls, retrieval, structured output — staying in metadata. Note rough volume per behavior.</li>
+          <li><strong>Inventory evaluations.</strong> <code>list_evaluation_tasks</code> for which judges exist and what each targets; <code>get_evaluation_scores</code> to tell an active eval from a dormant one.</li>
+          <li><strong>Diff.</strong> Map observed behaviors to the failure modes that would catch their faults (retrieval → faithfulness, tools → tool_call, structured output → format, and so on). Real volume with no matching eval is a gap.</li>
+          <li><strong>Rank</strong> gaps by volume × blast-radius, then report.</li>
+        </ol>
+
+        <h3>Reads</h3>
+        <div class="pills"><span class="pill"><b>list_observations</b></span><span class="pill"><b>list_evaluation_tasks</b></span><span class="pill">get_evaluation_scores</span></div>
+
+        <h3>Returns</h3>
+        <p>A short <strong>coverage table</strong> (behavior → volume → has-eval? → recommended failure mode) and a <strong>prioritized shortlist</strong> of gaps worth closing, each with a one-line rationale. For the top pick, it offers to run <a class="inline" href="#generate-eval">generate-eval</a> to build the judge right away.</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code</span>
+/coverage-gaps what am I not evaluating yet?
+
+<span class="c">// Copilot Chat</span>
+/coverage-gaps</code></pre></div>
+      </section>
+
+      <section id="generate-eval">
+        <div class="skill-title">
+          <h2>generate-eval</h2>
+          <div class="cmds"><span class="chip">/eval-from-trace</span><span class="chip">/eval-from-scratch</span></div>
+        </div>
+        <p class="lead">Produce a single-criterion, research-grounded LLM-as-a-Judge evaluator prompt that another model can run to score your system's outputs. Optionally ground it in your real production traces.</p>
+
+        <h3>Two entry points</h3>
+        <ul>
+          <li><strong>From real traces</strong> (<code>/eval-from-trace</code>) — pull representative observations over MCP, infer the judge config from what the system actually does, and quote real behavior as few-shot examples. Preferred when you have a live system on the platform.</li>
+          <li><strong>From a description</strong> (<code>/eval-from-scratch</code>) — paste a system prompt or describe the system, and the config is inferred from that text alone. No observability data needed.</li>
+        </ul>
+
+        <h3>How it works (from traces)</h3>
+        <ol>
+          <li><strong>Confirm scope</strong> — application/service, time window (max 72h), and the suspected symptom, which usually names the failure mode.</li>
+          <li><strong>Survey with metadata.</strong> <code>list_observations</code> to see the shape of traffic and choose the failure mode and template.</li>
+          <li><strong>Pull content only to author examples.</strong> <code>get_observation_details_with_content</code> (needs a <em>With content</em> key; max 3 IDs) for 1–2 clear pass and fail cases, trimmed and labelled.</li>
+          <li><strong>Assemble the prompt</strong> to the frame — one criterion, binary pass/fail, pre-specified steps, bias defenses on by default.</li>
+        </ol>
+
+        <h3>The frame, briefly</h3>
+        <ul>
+          <li><strong>One criterion per judge</strong> — single-criterion judges agree with humans far more reliably than multi-criterion ones.</li>
+          <li><strong>Binary pass/fail</strong> by default; pairwise only when the task genuinely compares two outputs.</li>
+          <li><strong>Pre-specified procedure steps</strong>, not judge-authored rubrics, which drift.</li>
+          <li><strong>Bias defenses</strong> on by default — length control, swap-and-agree for pairwise, and a cross-family judge (score on a different model family than the one under test).</li>
+        </ul>
+
+        <h3>Reads</h3>
+        <div class="pills"><span class="pill"><b>list_observations</b></span><span class="pill">get_observation_details_with_content</span><span class="pill">list_evaluation_tasks</span></div>
+
+        <h3>Returns</h3>
+        <p>One evaluator prompt, ready to run — with a security note baked in so the judge treats the outputs it scores as data, not instructions.</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code — grounded in real traces</span>
+/eval-from-trace build a faithfulness judge for my RAG app
+
+<span class="c">// Claude Code — from a description, no traces</span>
+/eval-from-scratch score tone on a support agent from this system prompt</code></pre></div>
+      </section>
+
+      <section id="loop">
+        <h2>How they chain</h2>
+        <p class="lead">The four are separate skills, but their outputs feed each other into one loop — each stage's output is the next stage's input.</p>
+        <ol>
+          <li><strong>trace-triage</strong> — a run fails; find the failure signature in the spans.</li>
+          <li><strong>coverage-gaps</strong> — confirm nothing measures that behavior yet.</li>
+          <li><strong>generate-eval</strong> — build the judge that catches it going forward.</li>
+          <li><strong>cost-report</strong> — watch spend while you iterate on the fix.</li>
+        </ol>
+        <p>You don't have to run them in order — each stands alone — but run end to end, they take you from a single broken trace to a durable eval without leaving your editor.</p>
+        <div class="callout">
+          <span class="k">Next</span>
+          <p>Install the toolkit from the <a class="inline" href="./index.html#start">Quickstart</a>, or read the source on <a class="inline" href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">GitHub</a>.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p class="note">Community open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>. MIT-licensed.</p>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">Repo</a>
+      <a href="./index.html#start">Quickstart</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById("theme");
+    function current() {
+      var set = document.documentElement.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    btn.addEventListener("click", function () {
+      var next = current() === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+  })();
+
+  (function () {
+    var COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>';
+    Array.prototype.slice.call(document.querySelectorAll("pre")).forEach(function (pre) {
+      var code = pre.querySelector("code");
+      if (!code) return;
+      var wrap = pre.parentNode.classList && pre.parentNode.classList.contains("codewrap") ? pre.parentNode : null;
+      if (!wrap) { wrap = document.createElement("div"); wrap.className = "codewrap"; pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre); }
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "copy"; btn.setAttribute("aria-label", "Copy to clipboard");
+      btn.innerHTML = COPY + '<span>Copy</span>';
+      var timer;
+      function flash(ok) {
+        var label = btn.querySelector("span");
+        btn.classList.add("done"); btn.querySelector("svg").outerHTML = CHECK;
+        label.textContent = ok ? "Copied" : "Press ⌘C";
+        clearTimeout(timer);
+        timer = setTimeout(function () { btn.classList.remove("done"); btn.querySelector("svg").outerHTML = COPY; label.textContent = "Copy"; }, 1500);
+      }
+      btn.addEventListener("click", function () {
+        var text = code.textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { flash(true); }, fallback);
+        } else { fallback(); }
+        function fallback() {
+          try {
+            var ta = document.createElement("textarea");
+            ta.value = text; ta.setAttribute("readonly", "");
+            ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select();
+            var ok = document.execCommand("copy"); document.body.removeChild(ta); flash(ok);
+          } catch (e) { flash(false); }
+        }
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+</script>
+</body>
+</html>
