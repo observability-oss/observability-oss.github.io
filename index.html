@@ -176,9 +176,9 @@
 
   /* quickstart */
   .quick { border: 1px solid var(--line-2); border-radius: 14px; padding: 26px 28px; }
-  .quick h3 { margin: 0 0 2px; font-size: 15px; font-weight: 600; }
+  .quick h3 { margin: 28px 0 2px; font-size: 15px; font-weight: 600; padding-top: 22px; border-top: 1px solid var(--line); }
   .quick .step { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin: 20px 0 8px; }
-  .quick .step:first-of-type { margin-top: 16px; }
+  .quick .step:first-of-type { margin-top: 6px; }
 
   footer { border-top: 1px solid var(--line); padding: 40px 0 64px; }
   .foot { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
@@ -258,12 +258,12 @@
           </div>
           <div class="pane" role="tabpanel" data-pane="copilot" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your MCP key <span class="dim">(same env var)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre></div></div>
-            <div class="pstep"><span class="pn">2</span><div class="pt">Copy <span class="icode">copilot/</span> into your repo <span class="dim">— <span class="icode">.vscode/mcp.json</span>, <span class="icode">.github/</span> prompts + instructions</span></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Copy <span class="icode">copilot/</span> from the repo into your project <span class="dim">— <span class="icode">.vscode/mcp.json</span> + <span class="icode">.github/</span> prompts &amp; instructions</span></div></div>
             <div class="pstep"><span class="pn">3</span><div class="pt">Run a prompt in Copilot Chat<pre><code>/trace-triage</code></pre></div></div>
           </div>
           <div class="pane" role="tabpanel" data-pane="skill" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your MCP key <span class="dim">(same env var)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre></div></div>
-            <div class="pstep"><span class="pn">2</span><div class="pt">Drop one skill folder into <span class="icode">.claude/skills/</span> <span class="dim">— or hand it to any agent</span></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Drop one skill folder from the repo into <span class="icode">.claude/skills/</span> <span class="dim">— or hand it to any agent</span></div></div>
             <div class="pstep"><span class="pn">3</span><div class="pt">Invoke it directly<pre><code>/cost-report</code></pre></div></div>
           </div>
         </div>
@@ -366,9 +366,10 @@
         <p>You'll need a <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability</a> account and an MCP API key (paid plan). A <em>Metadata-only</em> key covers every skill except quoting raw trace text.</p>
       </div>
       <div class="quick">
-        <h3>Claude Code</h3>
-        <div class="step">1 — set your key · Progress Observability → API Keys → MCP</div>
+        <div class="step">1 — set your key · Progress Observability → API Keys → MCP <span style="color:var(--faint)">· both setups</span></div>
         <pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre>
+
+        <h3>Claude Code</h3>
         <div class="step">2 — add the marketplace and install</div>
         <pre><code>/plugin marketplace add observability-oss/progress-observability-plugin
 /plugin install progress-observability</code></pre>
@@ -376,6 +377,13 @@
         <pre><code><span class="c">"why did checkout-agent stall in the last hour?"</span>
 <span class="c">"what's driving my spend this week?"</span>
 <span class="c">"what should I evaluate next?"</span></code></pre>
+
+        <h3>VS Code · Copilot</h3>
+        <div class="step">2 — copy the Copilot setup from the repo into your project</div>
+        <pre><code>cp -r copilot/.vscode copilot/.github your-repo/
+<span class="c"># then reload VS Code and start the progress-observability MCP server</span></code></pre>
+        <div class="step">3 — run a prompt in Copilot Chat (agent mode)</div>
+        <pre><code>/trace-triage   <span class="c"># or just ask in plain language</span></code></pre>
       </div>
     </div>
   </section>
