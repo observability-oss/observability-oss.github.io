@@ -82,6 +82,8 @@
   .content a.inline:hover { border-color: var(--fg); }
 
   .skill-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .skill-title .src { margin-left: auto; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line-2); padding-bottom: 1px; white-space: nowrap; }
+  .skill-title .src:hover { color: var(--fg); border-color: var(--fg); }
   .cmds { display: flex; gap: 6px; flex-wrap: wrap; }
   .chip { font-family: var(--mono); font-size: 12px; padding: 4px 8px; border-radius: 7px; border: 1px solid var(--line); color: var(--fg); background: var(--code-bg); }
   .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -236,6 +238,7 @@
         <div class="skill-title">
           <h2>trace-triage</h2>
           <div class="cmds"><span class="chip">/trace-triage</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/trace-triage" target="_blank" rel="noopener">Source ↗</a>
         </div>
         <p class="lead">Root-cause a single misbehaving run by walking its span tree, then hand back a diagnosis and a concrete fix.</p>
 
@@ -268,6 +271,7 @@
         <div class="skill-title">
           <h2>cost-report</h2>
           <div class="cmds"><span class="chip">/cost-report</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/cost-report" target="_blank" rel="noopener">Source ↗</a>
         </div>
         <p class="lead">Turn the platform's cost and usage data into a short, decision-ready report. Metadata only — it never touches trace content, so there's no injection surface.</p>
 
@@ -300,6 +304,7 @@
         <div class="skill-title">
           <h2>coverage-gaps</h2>
           <div class="cmds"><span class="chip">/coverage-gaps</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/coverage-gaps" target="_blank" rel="noopener">Source ↗</a>
         </div>
         <p class="lead">Compare what your system actually does in production against what your evaluations measure, and surface the highest-value unmeasured behaviors. This is the connective tissue between observing and evaluating.</p>
 
@@ -332,6 +337,7 @@
         <div class="skill-title">
           <h2>generate-eval</h2>
           <div class="cmds"><span class="chip">/eval-from-trace</span><span class="chip">/eval-from-scratch</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/generate-eval" target="_blank" rel="noopener">Source ↗</a>
         </div>
         <p class="lead">Produce a single-criterion, research-grounded LLM-as-a-Judge evaluator prompt that another model can run to score your system's outputs. Optionally ground it in your real production traces.</p>
 
