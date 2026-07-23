@@ -44,7 +44,8 @@
   .bar { display: flex; align-items: center; justify-content: space-between; height: 62px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
   .brand svg { width: 22px; height: 22px; display: block; }
-  .brand .sub { color: var(--faint); font-weight: 500; }
+  .brand .sub { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: -0.01em; }
+  @media (max-width: 760px) { .brand .sub { display: none; } }
   .nav { display: flex; align-items: center; gap: 4px; }
   .nav a.link { font-size: 13.5px; color: var(--muted); padding: 8px 11px; border-radius: 7px; }
   .nav a.link:hover, .nav a.link[aria-current="page"] { color: var(--fg); }
@@ -135,7 +136,7 @@
         <rect x="10" y="15" width="16" height="2.6" rx="1.3" fill="var(--bg)"></rect>
         <rect x="7" y="20" width="6" height="2.6" rx="1.3" fill="var(--faint)"></rect>
       </svg>
-      <span>progress-observability<span class="sub">/oss</span></span>
+      <span>observability-oss <span class="sub">skills &amp; plugins for progress-observability</span></span>
     </a>
     <nav class="nav">
       <a class="link" href="./index.html">Home</a>
@@ -162,6 +163,7 @@
       <nav>
         <a href="#overview">Overview</a>
         <a href="#model">The shared model</a>
+        <a class="sub" href="#health-check">health-check</a>
         <a class="sub" href="#trace-triage">trace-triage</a>
         <a class="sub" href="#cost-report">cost-report</a>
         <a class="sub" href="#coverage-gaps">coverage-gaps</a>
@@ -182,6 +184,7 @@
             <tr><td><b>cost-report</b></td><td>What am I spending, and what's driving it?</td><td><code>/cost-report</code></td></tr>
             <tr><td><b>coverage-gaps</b></td><td>Which behaviors run in production with no eval?</td><td><code>/coverage-gaps</code></td></tr>
             <tr><td><b>generate-eval</b></td><td>Build the judge that measures a behavior.</td><td><code>/eval-from-trace</code> · <code>/eval-from-scratch</code></td></tr>
+            <tr><td><b>health-check</b></td><td>Is my observability wired up correctly?</td><td><code>/health-check</code></td></tr>
           </tbody>
         </table>
       </section>
@@ -232,6 +235,39 @@
   -H "X-Api-Key: $OBSERVABILITY_MCP_API_KEY" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'</code></pre>
         </div>
+      </section>
+
+      <section id="health-check">
+        <div class="skill-title">
+          <h2>health-check</h2>
+          <div class="cmds"><span class="chip">/health-check</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/health-check" target="_blank" rel="noopener">Source ↗</a>
+        </div>
+        <p class="lead">Run a fixed diagnostic sequence that turns "it's not working" into a specific cause, then report a status checklist with the exact fix for anything red. Read-only and metadata-only — no trace content, so no injection surface. It's the odd one out: not part of the loop below, but the thing to run first.</p>
+
+        <h3>When to use</h3>
+        <p>First run, or whenever something looks off — "is my observability set up right", "why am I seeing no traces", "check my connection", "is my data flowing".</p>
+
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Connection &amp; key scope.</strong> Confirm the MCP tools are available and count them — <strong>7 = Metadata-only, 9 = With-content</strong>. Missing tools or auth errors point at the key (<code>OBSERVABILITY_MCP_API_KEY</code> / <code>.mcp.json</code>), not the platform.</li>
+          <li><strong>Recent data.</strong> <code>list_observations</code> over the last 24h, widening to the 72h max if empty — separating "stale traffic" from "no data" from "all older than the window".</li>
+          <li><strong>Instrumentation depth.</strong> <code>get_observation_details</code> (<code>include_children</code>) on a couple of recent traces — traces with no children mean the SDK is capturing top-level spans only.</li>
+          <li><strong>Evaluations.</strong> <code>list_evaluation_tasks</code> and <code>get_evaluation_scores</code> — none is fine, but dormant judges (defined, no recent scores) get flagged.</li>
+        </ol>
+
+        <h3>Reads</h3>
+        <div class="pills"><span class="pill"><b>list_observations</b></span><span class="pill">get_observation_details</span><span class="pill">list_evaluation_tasks</span><span class="pill">get_evaluation_scores</span></div>
+
+        <h3>Returns</h3>
+        <p>A compact red/amber/green checklist — connection, key scope, data freshness, instrumentation depth, evaluations — each red carrying the single concrete next step.</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code — no arguments</span>
+/health-check
+
+<span class="c">// Copilot Chat</span>
+/health-check</code></pre></div>
       </section>
 
       <section id="trace-triage">
