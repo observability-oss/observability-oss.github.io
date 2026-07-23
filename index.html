@@ -16,7 +16,7 @@
     --bg: #ffffff;
     --fg: #0a0a0a;
     --muted: #6b6b6b;
-    --faint: #9a9a9a;
+    --faint: #767676;
     --line: #ececec;
     --line-2: #dcdcdc;
     --card: #ffffff;
@@ -31,17 +31,17 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #6a6a6f;
+      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #8b8b91;
       --line: #202022; --line-2: #2b2b2e; --card: #0f0f11; --code-bg: #141416;
       --fill: #2a2a2e; --hi: #f1f1f2; --btn-bg: #f1f1f2; --btn-fg: #0a0a0a;
     }
   }
   :root[data-theme="light"] {
-    --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#9a9a9a; --line:#ececec; --line-2:#dcdcdc;
+    --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#767676; --line:#ececec; --line-2:#dcdcdc;
     --card:#fff; --code-bg:#f7f7f7; --fill:#e4e4e4; --hi:#0a0a0a; --btn-bg:#0a0a0a; --btn-fg:#fff;
   }
   :root[data-theme="dark"] {
-    --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#6a6a6f; --line:#202022; --line-2:#2b2b2e;
+    --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#8b8b91; --line:#202022; --line-2:#2b2b2e;
     --card:#0f0f11; --code-bg:#141416; --fill:#2a2a2e; --hi:#f1f1f2; --btn-bg:#f1f1f2; --btn-fg:#0a0a0a;
   }
 
@@ -65,7 +65,7 @@
   /* header */
   header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; height: 62px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; white-space: nowrap; }
   .brand svg { width: 22px; height: 22px; display: block; }
   .brand .sub { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: -0.01em; }
   @media (max-width: 760px) { .brand .sub { display: none; } }
@@ -73,6 +73,7 @@
   .nav a.link { font-size: 13.5px; color: var(--muted); padding: 8px 11px; border-radius: 7px; }
   .nav a.link:hover { color: var(--fg); }
   .nav a.gh { display: inline-flex; align-items: center; }
+  @media (max-width: 700px) { .nav a.link[href^="#"] { display: none; } }
   .icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line-2); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
   .icon-btn:hover { color: var(--fg); border-color: var(--fg); }
   .sun { display: none; } .moon { display: block; }
@@ -91,6 +92,7 @@
   h1 { font-weight: 600; letter-spacing: -0.03em; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; margin: 14px 0 0; text-wrap: balance; }
   .lede { color: var(--muted); font-size: 16.5px; max-width: 46ch; margin: 18px 0 0; letter-spacing: -0.01em; }
   .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .hero-grid > div { min-width: 0; }
 
   /* hero launch card — compact, all three ways to run */
   .launch { background: var(--card); border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; }
@@ -105,7 +107,7 @@
   .pane[hidden] { display: none; }
   .pstep { display: grid; grid-template-columns: 18px 1fr; gap: 11px; align-items: start; }
   .pstep .pn { font-family: var(--mono); font-size: 11px; color: var(--faint); line-height: 1.65; }
-  .pstep .pt { font-size: 13px; color: var(--muted); letter-spacing: -0.005em; }
+  .pstep .pt { font-size: 13px; color: var(--muted); letter-spacing: -0.005em; min-width: 0; }
   .pstep .pt .dim { color: var(--faint); }
   .pane pre { margin-top: 8px; padding: 10px 12px; }
   .pane code { font-size: 12px; line-height: 1.7; }
@@ -117,6 +119,9 @@
   .sec-head { margin-bottom: 36px; max-width: 62ch; }
   .sec-head h2 { font-weight: 600; letter-spacing: -0.025em; font-size: 27px; margin: 10px 0 0; }
   .sec-head p { color: var(--muted); margin: 10px 0 0; font-size: 15.5px; }
+  section.tint { background: color-mix(in srgb, var(--fg) 3%, var(--bg)); }
+  .feature .ways { color: var(--muted); font-size: 14px; margin: 16px 0 0; }
+  .feature .ways b { color: var(--fg); font-weight: 600; }
 
   /* flagship */
   .feature { border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden; }
@@ -129,9 +134,6 @@
   .feature .links { display: flex; gap: 18px; margin-top: 22px; }
   .feature .links a { font-size: 13.5px; color: var(--fg); border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
   .feature .links a:hover { border-color: var(--fg); }
-  .install { min-width: 300px; }
-  .install h4 { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--faint); text-transform: uppercase; margin: 0 0 10px; font-weight: 500; }
-  .install .ib + .ib { margin-top: 16px; }
   pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 9px; padding: 14px 15px; overflow-x: auto; }
   code { font-family: var(--mono); font-size: 12.5px; line-height: 1.85; color: var(--fg); }
   code .c { color: var(--faint); }
@@ -170,11 +172,6 @@
   .stage .t { font-family: var(--mono); font-weight: 600; margin: 10px 0 7px; font-size: 14px; }
   .stage p { margin: 0; color: var(--muted); font-size: 13.5px; }
 
-  /* setups */
-  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .mini { border: 1px solid var(--line-2); border-radius: 12px; padding: 22px; }
-  .mini .k { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
-  .mini p { color: var(--muted); font-size: 14px; margin: 9px 0 0; }
   .soon { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line-2); border-radius: 5px; padding: 2px 7px; margin-left: 10px; vertical-align: middle; }
 
   /* quickstart */
@@ -194,8 +191,7 @@
     .hero { padding: 64px 0 48px; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
     .feature .body { grid-template-columns: 1fr; }
-    .install { min-width: 0; }
-    .grid, .loop, .trio { grid-template-columns: 1fr; }
+    .grid, .loop { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -212,10 +208,10 @@
       <span>observability-oss <span class="sub">skills &amp; plugins for progress-observability</span></span>
     </div>
     <nav class="nav">
-      <a class="link" href="#tools">Tools</a>
-      <a class="link" href="#loop">How it fits</a>
+      <a class="link" href="#tools">Toolkit</a>
+      <a class="link" href="#skills">Skills</a>
+      <a class="link" href="#loop">How it works</a>
       <a class="link" href="./docs.html">Docs</a>
-      <a class="link" href="#start">Quickstart</a>
       <a class="link gh" href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener" aria-label="GitHub repository">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
       </a>
@@ -278,7 +274,7 @@
   <section id="tools">
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">What's here</span>
+        <span class="eyebrow">Overview</span>
         <h2>The toolkit</h2>
         <p>One read-only MCP connection to the Progress Observability Platform, four workflows on top of it — shipped from a single source as a Claude Code plugin and a VS Code / Copilot setup, so the same skills run in either.</p>
       </div>
@@ -297,23 +293,13 @@
               <span class="chip">/cost-report</span>
               <span class="chip">/coverage-gaps</span>
               <span class="chip">/eval-from-trace</span>
+              <span class="chip">/health-check</span>
             </div>
+            <p class="ways">Run it three ways — a <b>Claude Code</b> plugin, a <b>VS Code / Copilot</b> setup, or a single <b>lifted skill</b> in any agent. Install steps below.</p>
             <div class="links">
               <a href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">Repository</a>
+              <a href="./docs.html">Docs</a>
               <a href="#start">Install</a>
-            </div>
-          </div>
-          <div class="install">
-            <div class="ib">
-              <h4>Claude Code</h4>
-              <pre><code>/plugin marketplace add \
-  observability-oss/progress-observability-plugin
-/plugin install progress-observability</code></pre>
-            </div>
-            <div class="ib">
-              <h4>VS Code · Copilot</h4>
-              <pre><code>cp -r copilot/.vscode copilot/.github your-repo/
-<span class="c"># mcp.json, prompts, and instructions — then reload</span></code></pre>
             </div>
           </div>
         </div>
@@ -321,7 +307,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="skills">
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">Five skills</span>
@@ -346,10 +332,10 @@
     </div>
   </section>
 
-  <section id="loop">
+  <section id="loop" class="tint">
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">How it fits</span>
+        <span class="eyebrow">How it works</span>
         <h2>Triage a failure, find the gap, build the eval, track the cost</h2>
         <p>The four skills chain into one loop — each stage's output is the next stage's input.</p>
       </div>
@@ -365,36 +351,23 @@
   <section>
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">Ways to run it</span>
-        <h2>Three setups, same skills</h2>
-      </div>
-      <div class="trio">
-        <div class="mini"><div class="k">Claude Code plugin</div><p>All four skills, their commands, and the MCP connection in one install.</p></div>
-        <div class="mini"><div class="k">VS Code · Copilot</div><p>Instructions + prompts + MCP config, generated from the same sources and kept in sync.</p></div>
-        <div class="mini"><div class="k">A single skill</div><p>Lift one skill into Claude Code, or hand its instructions to any agent.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="eyebrow">More, soon</span>
+        <span class="eyebrow">Roadmap</span>
         <h2>Getting-started templates <span class="soon">Coming soon</span></h2>
         <p>Starter repos pre-wired for observability — clone, add your keys, and you have a traced agent to build on. Listed here as they're published.</p>
       </div>
     </div>
   </section>
 
-  <section id="start">
+  <section id="start" class="tint">
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">Quickstart</span>
         <h2>Running in three steps</h2>
+        <p>You'll need a <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability</a> account and an MCP API key (paid plan). A <em>Metadata-only</em> key covers every skill except quoting raw trace text.</p>
       </div>
       <div class="quick">
         <h3>Claude Code</h3>
-        <div class="step">1 — set your key (Progress Observability → API Keys → MCP)</div>
+        <div class="step">1 — set your key · Progress Observability → API Keys → MCP</div>
         <pre><code>export OBSERVABILITY_MCP_API_KEY="mcp_…"</code></pre>
         <div class="step">2 — add the marketplace and install</div>
         <pre><code>/plugin marketplace add observability-oss/progress-observability-plugin
@@ -410,11 +383,11 @@
 
 <footer>
   <div class="wrap foot">
-    <p class="note">Community open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>. MIT-licensed.</p>
+    <p class="note">Independent community project — not affiliated with or endorsed by Progress Software. Open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>, MIT-licensed.</p>
     <nav>
+      <a href="./docs.html">Docs</a>
       <a href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">Repo</a>
       <a href="https://github.com/observability-oss" target="_blank" rel="noopener">GitHub</a>
-      <a href="#tools">Tools</a>
     </nav>
   </div>
 </footer>

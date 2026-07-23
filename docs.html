@@ -13,7 +13,7 @@
 </script>
 <style>
   :root {
-    --bg: #ffffff; --fg: #0a0a0a; --muted: #6b6b6b; --faint: #9a9a9a;
+    --bg: #ffffff; --fg: #0a0a0a; --muted: #6b6b6b; --faint: #767676;
     --line: #ececec; --line-2: #dcdcdc; --card: #ffffff; --code-bg: #f7f7f7;
     --fill: #e4e4e4; --hi: #0a0a0a; --btn-bg: #0a0a0a; --btn-fg: #ffffff;
     --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
@@ -22,13 +22,13 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #6a6a6f;
+      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #8b8b91;
       --line: #202022; --line-2: #2b2b2e; --card: #0f0f11; --code-bg: #141416;
       --fill: #2a2a2e; --hi: #f1f1f2; --btn-bg: #f1f1f2; --btn-fg: #0a0a0a;
     }
   }
-  :root[data-theme="light"] { --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#9a9a9a; --line:#ececec; --line-2:#dcdcdc; --card:#fff; --code-bg:#f7f7f7; --fill:#e4e4e4; --hi:#0a0a0a; --btn-bg:#0a0a0a; --btn-fg:#fff; }
-  :root[data-theme="dark"] { --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#6a6a6f; --line:#202022; --line-2:#2b2b2e; --card:#0f0f11; --code-bg:#141416; --fill:#2a2a2e; --hi:#f1f1f2; --btn-bg:#f1f1f2; --btn-fg:#0a0a0a; }
+  :root[data-theme="light"] { --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#767676; --line:#ececec; --line-2:#dcdcdc; --card:#fff; --code-bg:#f7f7f7; --fill:#e4e4e4; --hi:#0a0a0a; --btn-bg:#0a0a0a; --btn-fg:#fff; }
+  :root[data-theme="dark"] { --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#8b8b91; --line:#202022; --line-2:#2b2b2e; --card:#0f0f11; --code-bg:#141416; --fill:#2a2a2e; --hi:#f1f1f2; --btn-bg:#f1f1f2; --btn-fg:#0a0a0a; }
 
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
@@ -42,7 +42,7 @@
   /* header (matches home) */
   header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; height: 62px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; white-space: nowrap; }
   .brand svg { width: 22px; height: 22px; display: block; }
   .brand .sub { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: -0.01em; }
   @media (max-width: 760px) { .brand .sub { display: none; } }
@@ -434,7 +434,7 @@
 
 <footer>
   <div class="wrap foot">
-    <p class="note">Community open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>. MIT-licensed.</p>
+    <p class="note">Independent community project — not affiliated with or endorsed by Progress Software. Open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>, MIT-licensed.</p>
     <nav>
       <a href="./index.html">Home</a>
       <a href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">Repo</a>
