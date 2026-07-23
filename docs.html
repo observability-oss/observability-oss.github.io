@@ -154,7 +154,7 @@
   <div class="wrap page-head">
     <span class="eyebrow">Documentation</span>
     <h1>How the skills work</h1>
-    <p>Four skills sit on one read-only connection to the Progress Observability Platform, reached over MCP. Each does a single job — triage a run, report cost, find eval gaps, or build a judge — and runs identically whether you invoke it from Claude Code or GitHub Copilot. This page explains what each one does, how it works, what it reads, and how to run it.</p>
+    <p>Five skills sit on one read-only connection to the Progress Observability Platform, reached over MCP. Four do a single job each — triage a run, report cost, find eval gaps, or build a judge — and a fifth, <code>health-check</code>, verifies your setup. Each runs identically whether you invoke it from Claude Code or GitHub Copilot. This page explains what each one does, how it works, what it reads, and how to run it.</p>
   </div>
 
   <div class="wrap doc">
@@ -175,7 +175,7 @@
     <div class="content">
       <section id="overview">
         <h2>Overview</h2>
-        <p class="lead">A skill is a focused instruction set your coding agent loads on demand. These four are packaged together as the <code>progress-observability</code> toolkit, but each is self-contained and can be lifted out on its own.</p>
+        <p class="lead">A skill is a focused instruction set your coding agent loads on demand. These five are packaged together as the <code>progress-observability</code> toolkit, but each is self-contained and can be lifted out on its own.</p>
         <p>They share one design rule: <strong>read, don't act.</strong> Every tool the skills call is read-only, they default to metadata over raw content, and they treat anything pulled from a trace as untrusted data. What differs between them is the question each answers.</p>
         <table>
           <thead><tr><th>Skill</th><th>Answers</th><th>Command</th></tr></thead>
@@ -183,7 +183,7 @@
             <tr><td><b>trace-triage</b></td><td>Why did this run fail, stall, or misbehave?</td><td><code>/trace-triage</code></td></tr>
             <tr><td><b>cost-report</b></td><td>What am I spending, and what's driving it?</td><td><code>/cost-report</code></td></tr>
             <tr><td><b>coverage-gaps</b></td><td>Which behaviors run in production with no eval?</td><td><code>/coverage-gaps</code></td></tr>
-            <tr><td><b>generate-eval</b></td><td>Build the judge that measures a behavior.</td><td><code>/eval-from-trace</code> · <code>/eval-from-scratch</code></td></tr>
+            <tr><td><b>generate-eval</b></td><td>How do I build an eval for a behavior?</td><td><code>/eval-from-trace</code> · <code>/eval-from-scratch</code></td></tr>
             <tr><td><b>health-check</b></td><td>Is my observability wired up correctly?</td><td><code>/health-check</code></td></tr>
           </tbody>
         </table>
@@ -191,7 +191,7 @@
 
       <section id="model">
         <h2>The shared model</h2>
-        <p class="lead">Everything below rides on one MCP server. Understanding it once explains how all four skills behave.</p>
+        <p class="lead">Everything below rides on one MCP server. Understanding it once explains how all five skills behave.</p>
 
         <h3>Connection</h3>
         <p>A remote, read-only MCP endpoint at <code>https://mcp.observability.progress.com/mcp</code>. The plugin's <code>.mcp.json</code> authenticates with an <code>X-Api-Key</code> header, sourced from the <code>OBSERVABILITY_MCP_API_KEY</code> environment variable. What you can read is scoped by that key.</p>
