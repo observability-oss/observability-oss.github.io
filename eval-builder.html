@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free LLM-as-a-Judge Eval Builder · Agent Observability OSS</title>
+<meta name="description" content="Build a research-grounded LLM-as-a-Judge evaluator prompt in your browser - pick a failure mode, get a copy-pasteable judge with pre-specified steps, bias defenses, and citations. Free, no signup, nothing leaves your browser." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Free LLM-as-a-Judge Eval Builder" />
+<meta property="og:description" content="Pick a failure mode, get a research-grounded evaluator prompt - fixed procedure steps, bias defenses, citations. Free, no signup, runs entirely in your browser." />
+<meta property="og:url" content="https://observability-oss.github.io/eval-builder.html" />
+<link rel="canonical" href="https://observability-oss.github.io/eval-builder.html" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Crect x='6' y='10' width='8' height='2.6' rx='1.3' fill='%23555'/%3E%3Crect x='10' y='15' width='16' height='2.6' rx='1.3' fill='%23fff'/%3E%3Crect x='7' y='20' width='6' height='2.6' rx='1.3' fill='%23555'/%3E%3C/svg%3E" />
+<script>
+  (function () {
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #0a0a0a; --muted: #6b6b6b; --faint: #767676;
+    --line: #ececec; --line-2: #dcdcdc; --card: #ffffff; --code-bg: #f7f7f7;
+    --fill: #e4e4e4; --hi: #0a0a0a; --btn-bg: #0a0a0a; --btn-fg: #ffffff;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1160px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0b; --fg: #f1f1f2; --muted: #9b9b9f; --faint: #8b8b91;
+      --line: #202022; --line-2: #2b2b2e; --card: #0f0f11; --code-bg: #141416;
+      --fill: #2a2a2e; --hi: #f1f1f2; --btn-bg: #f1f1f2; --btn-fg: #0a0a0a;
+    }
+  }
+  :root[data-theme="light"] { --bg:#fff; --fg:#0a0a0a; --muted:#6b6b6b; --faint:#767676; --line:#ececec; --line-2:#dcdcdc; --card:#fff; --code-bg:#f7f7f7; --fill:#e4e4e4; --hi:#0a0a0a; --btn-bg:#0a0a0a; --btn-fg:#fff; }
+  :root[data-theme="dark"] { --bg:#0a0a0b; --fg:#f1f1f2; --muted:#9b9b9f; --faint:#8b8b91; --line:#202022; --line-2:#2b2b2e; --card:#0f0f11; --code-bg:#141416; --fill:#2a2a2e; --hi:#f1f1f2; --btn-bg:#f1f1f2; --btn-fg:#0a0a0a; }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; letter-spacing: -0.006em; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--fg); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 2px; }
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+
+  header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; white-space: nowrap; }
+  .brand svg { width: 22px; height: 22px; display: block; }
+  .brand .sub { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: -0.01em; }
+  @media (max-width: 760px) { .brand .sub { display: none; } }
+  .nav { display: flex; align-items: center; gap: 4px; }
+  .nav a.link { font-size: 13.5px; color: var(--muted); padding: 8px 11px; border-radius: 7px; }
+  .nav a.link:hover, .nav a.link[aria-current="page"] { color: var(--fg); }
+  .nav a.gh { display: inline-flex; align-items: center; }
+  @media (max-width: 700px) { .nav a.link { padding: 8px 8px; } }
+  .icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line-2); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+  .icon-btn:hover { color: var(--fg); border-color: var(--fg); }
+  .sun { display: none; } .moon { display: block; }
+  :root[data-theme="dark"] .sun { display: block; } :root[data-theme="dark"] .moon { display: none; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sun { display:block; } :root:not([data-theme="light"]) .moon { display:none; } }
+
+  .page-head { padding: 46px 0 8px; }
+  .page-head h1 { font-weight: 600; letter-spacing: -0.03em; font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin: 12px 0 0; text-wrap: balance; }
+  .page-head p { color: var(--muted); font-size: 16px; max-width: 70ch; margin: 14px 0 0; }
+  .page-head p code { font-family: var(--mono); font-size: 13px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+
+  .builder { display: grid; grid-template-columns: 380px 1fr; gap: 32px; align-items: start; padding: 28px 0 56px; }
+  @media (max-width: 940px) { .builder { grid-template-columns: 1fr; } }
+
+  /* form */
+  .panel { border: 1px solid var(--line-2); border-radius: 14px; padding: 20px; background: var(--card); }
+  .panel + .panel { margin-top: 14px; }
+  .panel h3 { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; font-weight: 500; }
+  .modes { display: flex; flex-direction: column; gap: 6px; }
+  .mode { display: block; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; cursor: pointer; transition: border-color .1s, background .1s; }
+  .mode:hover { border-color: var(--line-2); background: var(--code-bg); }
+  .mode input { position: absolute; opacity: 0; pointer-events: none; }
+  .mode .k { font-family: var(--mono); font-size: 13px; font-weight: 600; }
+  .mode .w { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; line-height: 1.45; }
+  .mode.active { border-color: var(--fg); }
+  .mode.active .k::after { content: " ✓"; }
+  .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .opt { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2); border-radius: 7px; padding: 6px 10px; cursor: pointer; color: var(--muted); background: transparent; }
+  .opt:hover { color: var(--fg); }
+  .opt.active { background: var(--btn-bg); color: var(--btn-fg); border-color: var(--btn-bg); }
+  .hint { color: var(--faint); font-size: 12.5px; margin: 10px 0 0; line-height: 1.5; }
+  .check { display: flex; align-items: flex-start; gap: 9px; padding: 7px 0; cursor: pointer; }
+  .check input { margin-top: 4px; accent-color: var(--fg); }
+  .check .t { font-size: 13.5px; }
+  .check .t small { display: block; color: var(--faint); font-size: 12px; }
+  textarea { width: 100%; min-height: 74px; resize: vertical; background: var(--code-bg); color: var(--fg); border: 1px solid var(--line-2); border-radius: 9px; padding: 10px 12px; font-family: var(--sans); font-size: 13.5px; line-height: 1.5; }
+  textarea:focus { outline: 2px solid var(--fg); outline-offset: 1px; }
+  #customWrap { display: none; margin-top: 12px; }
+
+  /* output */
+  .out h3 { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin: 22px 0 10px; font-weight: 500; }
+  .out h3:first-child { margin-top: 0; }
+  .codewrap { position: relative; }
+  pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 11px; padding: 16px 18px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+  code { font-family: var(--mono); font-size: 12.5px; line-height: 1.75; color: var(--fg); }
+  .copy { position: absolute; top: 8px; right: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .03em; color: var(--muted); background: var(--code-bg); border: 1px solid var(--line-2); border-radius: 6px; padding: 3px 7px; cursor: pointer; opacity: 0; transition: opacity .12s ease, color .12s, border-color .12s; }
+  .copy svg { width: 12px; height: 12px; }
+  .codewrap:hover .copy, .copy:focus-visible { opacity: 1; }
+  .copy:hover { color: var(--fg); border-color: var(--fg); }
+  .copy.done { color: var(--fg); border-color: var(--fg); }
+  @media (hover: none) { .copy { opacity: .7; } }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { font-family: var(--mono); font-size: 12px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--code-bg); color: var(--fg); }
+  .why { color: var(--muted); font-size: 14px; border: 1px solid var(--line-2); border-radius: 11px; padding: 14px 16px; }
+  .why b { color: var(--fg); }
+  ul.notes { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  ul.notes li { margin: 6px 0; }
+  ol.cites { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+  ol.cites li { margin: 5px 0; }
+  ol.cites a { border-bottom: 1px solid var(--line-2); }
+  ol.cites a:hover { border-color: var(--fg); }
+
+  /* funnel */
+  .next { border-top: 1px solid var(--line); background: color-mix(in srgb, var(--fg) 3%, var(--bg)); padding: 46px 0 56px; }
+  .next h2 { font-weight: 600; letter-spacing: -0.02em; font-size: 21px; margin: 8px 0 0; }
+  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+  @media (max-width: 880px) { .next-grid { grid-template-columns: 1fr; } }
+  .next-card { border: 1px solid var(--line-2); border-radius: 12px; padding: 18px 20px; background: var(--bg); display: block; transition: border-color .1s; }
+  .next-card:hover { border-color: var(--fg); }
+  .next-card .k { font-weight: 600; font-size: 14.5px; }
+  .next-card p { color: var(--muted); font-size: 13.5px; margin: 7px 0 0; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0 60px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .foot .note { color: var(--muted); font-size: 13.5px; max-width: 54ch; }
+  .foot nav { display: flex; gap: 20px; }
+  .foot nav a { color: var(--muted); font-size: 13.5px; }
+  .foot nav a:hover { color: var(--fg); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="./index.html">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="6" fill="var(--fg)"></rect>
+        <rect x="6" y="10" width="8" height="2.6" rx="1.3" fill="var(--faint)"></rect>
+        <rect x="10" y="15" width="16" height="2.6" rx="1.3" fill="var(--bg)"></rect>
+        <rect x="7" y="20" width="6" height="2.6" rx="1.3" fill="var(--faint)"></rect>
+      </svg>
+      <span>observability-oss <span class="sub">skills &amp; plugins for progress-observability</span></span>
+    </a>
+    <nav class="nav">
+      <a class="link" href="./docs.html">Docs</a>
+      <a class="link" href="./eval-builder.html" aria-current="page">Eval builder</a>
+      <a class="link gh" href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener" aria-label="GitHub repository"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle color theme">
+        <svg class="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap page-head">
+    <span class="eyebrow">Free tool · no signup · runs in your browser</span>
+    <h1>LLM-as-a-Judge eval builder</h1>
+    <p>Pick a failure mode and get a complete evaluator prompt - single criterion, pre-specified procedure steps, bias defenses, and the research behind each choice. Built on the same frame as the <code>generate-eval</code> skill; nothing you enter leaves this page.</p>
+  </div>
+
+  <div class="wrap builder">
+    <div>
+      <div class="panel">
+        <h3>1 · What failure mode should the judge catch?</h3>
+        <div class="modes" id="modes" role="radiogroup" aria-label="Failure mode"></div>
+        <div id="customWrap">
+          <textarea id="customCriterion" placeholder="Define the criterion in 1–3 concrete sentences, in your domain's language - e.g. 'Every discount the agent offers must match the published pricing table.'"></textarea>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>2 · Is there a ground truth to check against?</h3>
+        <div class="opts" id="refOpts" role="radiogroup" aria-label="Reference availability">
+          <button class="opt" data-v="yes" type="button">yes - always</button>
+          <button class="opt" data-v="sometimes" type="button">sometimes</button>
+          <button class="opt active" data-v="no" type="button">no</button>
+        </div>
+        <p class="hint">A reference is a ground truth the judge can check against - retrieved chunks for RAG, gold SQL, a reference summary.</p>
+      </div>
+      <div class="panel">
+        <h3>3 · One output, or comparing two?</h3>
+        <div class="opts" id="modeOpts" role="radiogroup" aria-label="Scoring mode">
+          <button class="opt active" data-v="pointwise" type="button">pointwise - score one</button>
+          <button class="opt" data-v="pairwise" type="button">pairwise - pick A or B</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>4 · Bias defenses</h3>
+        <label class="check"><input type="checkbox" id="defLength" checked />
+          <span class="t">Length control<small>Adds a line so the judge doesn't reward verbosity (Saito 2023, Dubois 2024).</small></span></label>
+        <label class="check" id="defSwapWrap" style="display:none"><input type="checkbox" id="defSwap" checked />
+          <span class="t">Swap-and-agree<small>Run both orderings; keep the verdict only if it survives the swap (Wang 2023).</small></span></label>
+        <label class="check"><input type="checkbox" id="defCross" checked />
+          <span class="t">Cross-family judge<small>Score with a different model family than the one under test (Panickssery 2024).</small></span></label>
+      </div>
+    </div>
+
+    <div class="out">
+      <h3>Evaluator prompt</h3>
+      <div class="codewrap"><pre><code id="promptOut"></code></pre></div>
+      <h3>Run settings</h3>
+      <div class="meta-row"><span class="pill" id="scoreRange"></span><span class="pill" id="scaleLabels"></span></div>
+      <h3>Why this config</h3>
+      <div class="why" id="why"></div>
+      <h3>When you run it</h3>
+      <ul class="notes" id="runNotes"></ul>
+      <h3>Research</h3>
+      <ol class="cites" id="cites"></ol>
+    </div>
+  </div>
+
+  <section class="next">
+    <div class="wrap">
+      <span class="eyebrow">Next</span>
+      <h2>One judge from a description is a start - production needs more</h2>
+      <div class="next-grid">
+        <a class="next-card" href="./docs.html#generate-eval">
+          <span class="k">Ground it in real traces</span>
+          <p>The <code>generate-eval</code> skill builds this same judge from your actual production behavior - real few-shot examples pulled over MCP.</p>
+        </a>
+        <a class="next-card" href="./docs.html#coverage-gaps">
+          <span class="k">Find the judges you're missing</span>
+          <p><code>coverage-gaps</code> diffs what runs in production against what your evals measure, and ranks what to build next.</p>
+        </a>
+        <a class="next-card" href="./index.html#start">
+          <span class="k">Install the toolkit</span>
+          <p>Seven skills for Claude Code and GitHub Copilot over the Progress Observability Platform - trace triage, cost, coverage, evals, a setup check, and scaffolding or instrumenting your agents.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p class="note">Independent community project - not affiliated with or endorsed by Progress Software. Open-source tooling for the <a href="https://www.telerik.com/ai-observability-platform" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">Progress Observability Platform</a>, MIT-licensed.</p>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./docs.html">Docs</a>
+      <a href="https://github.com/observability-oss/progress-observability-plugin" target="_blank" rel="noopener">Repo</a>
+      <a href="https://www.linkedin.com/in/lyuata/" target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="./eval-builder-data.js"></script>
+<script>
+  (function () {
+    var btn = document.getElementById("theme");
+    function current() {
+      var set = document.documentElement.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    btn.addEventListener("click", function () {
+      var next = current() === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+  })();
+
+  (function () {
+    // Canonical criterion phrasings per mode (frame.md leaves criterion wording
+    // to the author; definitions/steps below come verbatim from frame.md).
+    var CRITERIA = {
+      faithfulness: "faithfulness - every factual claim in the response must be grounded in the provided reference",
+      relevance: "relevance - the response must directly address what the input asks",
+      helpfulness: "helpfulness - the response must materially advance the user's goal",
+      tool_call: "tool-call correctness - the right tool is selected and every argument matches the user's intent",
+      safety: "safety - the response must contain no PII leakage, harmful content, or policy violations",
+      tone: "tone - the response must sustain the target voice throughout",
+      conciseness: "conciseness - the response must answer without padding; every sentence carries weight",
+      format: "format compliance - the response must match the required structural contract exactly"
+    };
+    var CUSTOM_PASS = "The response satisfies the criterion as stated.";
+    var CUSTOM_FAIL = "The response fails at least one aspect of the criterion.";
+
+    var state = { mode: "faithfulness", ref: "no", scoring: "pointwise",
+                  lengthControl: true, swapAndAgree: true, crossFamilyJudge: true };
+
+    // --- build failure-mode radio cards from FRAME data
+    var modesEl = document.getElementById("modes");
+    FRAME.modeOrder.forEach(function (key) {
+      var m = FRAME.modes[key];
+      var label = document.createElement("label");
+      label.className = "mode" + (key === state.mode ? " active" : "");
+      label.innerHTML = '<input type="radio" name="mode" value="' + key + '"' + (key === state.mode ? " checked" : "") + ' />' +
+        '<span class="k">' + key + '</span><span class="w">' + (m.pickWhen || "Define your own criterion.") + "</span>";
+      label.addEventListener("click", function () {
+        state.mode = key;
+        Array.prototype.forEach.call(modesEl.children, function (c) { c.classList.toggle("active", c === label); });
+        document.getElementById("customWrap").style.display = key === "custom" ? "block" : "none";
+        render();
+      });
+      modesEl.appendChild(label);
+    });
+
+    function wireOpts(id, field) {
+      var el = document.getElementById(id);
+      Array.prototype.forEach.call(el.querySelectorAll(".opt"), function (b) {
+        b.addEventListener("click", function () {
+          state[field] = b.getAttribute("data-v");
+          Array.prototype.forEach.call(el.querySelectorAll(".opt"), function (x) { x.classList.toggle("active", x === b); });
+          if (field === "scoring") document.getElementById("defSwapWrap").style.display = state.scoring === "pairwise" ? "flex" : "none";
+          render();
+        });
+      });
+    }
+    wireOpts("refOpts", "ref");
+    wireOpts("modeOpts", "scoring");
+    ["defLength", "defSwap", "defCross"].forEach(function (id) {
+      document.getElementById(id).addEventListener("change", function () {
+        state.lengthControl = document.getElementById("defLength").checked;
+        state.swapAndAgree = document.getElementById("defSwap").checked;
+        state.crossFamilyJudge = document.getElementById("defCross").checked;
+        render();
+      });
+    });
+    document.getElementById("customCriterion").addEventListener("input", render);
+
+    function buildPrompt() {
+      var m = FRAME.modes[state.mode];
+      var pair = state.scoring === "pairwise";
+      var hasRef = state.ref !== "no";
+      var criterion = state.mode === "custom"
+        ? (document.getElementById("customCriterion").value.trim() || "<define your criterion in 1–3 concrete sentences>")
+        : CRITERIA[state.mode];
+      criterion = criterion.replace(/[.\s]+$/, "");
+      var passDef = m["pass"] || CUSTOM_PASS;
+      var failDef = m["fail"] || CUSTOM_FAIL;
+
+      var L = [];
+      L.push(pair
+        ? "You are an impartial evaluator. Strictly compare two responses on one criterion."
+        : "You are an impartial evaluator. Decide whether a single response satisfies one criterion.");
+      L.push("");
+      L.push("Criterion: " + criterion + ".");
+      L.push((pair ? "Strong response" : "pass") + ": " + passDef);
+      L.push((pair ? "Weak response" : "fail") + ": " + failDef);
+      L.push("");
+      L.push("Procedure:");
+      var steps = m.steps.slice();
+      // pairwise: the procedure's final line becomes the A/B instruction -
+      // replace a bare "decide pass or fail" step rather than contradicting it
+      if (pair && /decide pass or fail/i.test(steps[steps.length - 1] || "")) steps.pop();
+      steps.forEach(function (s, i) { L.push((i + 1) + ". " + s); });
+      if (pair) L.push((steps.length + 1) + ". Apply each step to both responses, then choose A or B.");
+      if (hasRef) { L.push(""); L.push(FRAME.fixedLines.reference); }
+      if (state.lengthControl) { L.push(""); L.push(FRAME.fixedLines.length); }
+      L.push("");
+      L.push(FRAME.fixedLines.security);
+      L.push("");
+      L.push("Now evaluate the following:");
+      L.push("");
+      L.push("Input:");
+      L.push("{{input}}");
+      L.push("");
+      if (pair) {
+        L.push("Response A:"); L.push("{{response_a}}"); L.push("");
+        L.push("Response B:"); L.push("{{response_b}}"); L.push("");
+      } else {
+        L.push("Output:"); L.push("{{output}}"); L.push("");
+      }
+      if (hasRef) { L.push("Reference:"); L.push("{{reference}}"); L.push(""); }
+      L.push("Briefly explain your reasoning in 2 to 5 sentences, then state your verdict.");
+      return L.join("\n");
+    }
+
+    function buildWhy() {
+      var pair = state.scoring === "pairwise";
+      var hasRef = state.ref !== "no";
+      var parts = [];
+      parts.push("<b>One criterion (" + state.mode + ")</b> - single-criterion judges agree with humans far more reliably than multi-criterion ones.");
+      parts.push(pair
+        ? "<b>Pairwise A/B</b> - chosen because you're comparing two outputs; the verdict should survive order-swapping."
+        : "<b>Binary pass/fail</b> - the most reliable output scale for a pointwise judge.");
+      parts.push(hasRef
+        ? "<b>Reference-grounded</b> - the judge is told to trust your ground truth over its own world knowledge."
+        : "<b>No reference</b> - the judge scores the output on the criterion alone; add a ground truth later if one exists.");
+      parts.push("<b>Pre-specified steps</b> - the procedure is fixed, not judge-authored, so verdicts don't drift between calls.");
+      return parts.join(" ");
+    }
+
+    function buildNotes() {
+      var notes = [];
+      if (state.crossFamilyJudge) notes.push("Run the judge on a <b>different model family</b> than the system under test - judges favor their own generations.");
+      if (state.scoring === "pairwise" && state.swapAndAgree) notes.push("Run <b>both orderings</b> (A/B, then B/A) and keep only verdicts that agree.");
+      notes.push("Score a <b>sample</b> and report results with error bars - single-run numbers mislead.");
+      notes.push("Substitute the <code>{{…}}</code> placeholders at run time with your input, output" + (state.ref !== "no" ? ", and reference" : "") + ".");
+      return notes;
+    }
+
+    function buildCites() {
+      var map = FRAME.citationMapping;
+      var keys = map.always.slice();
+      if (state.ref !== "no") keys = keys.concat(map.referenced);
+      if (state.scoring === "pairwise") keys = keys.concat(map.pairwise);
+      if (state.scoring === "pairwise" && state.swapAndAgree) keys = keys.concat(map.swapAndAgree);
+      if (state.lengthControl) keys = keys.concat(map.lengthControl);
+      if (state.crossFamilyJudge) keys = keys.concat(map.crossFamilyJudge);
+      if (state.mode === "custom") keys = keys.concat(map.custom);
+      var seen = {};
+      return keys.filter(function (k) { if (seen[k]) return false; seen[k] = true; return true; });
+    }
+
+    function render() {
+      var pair = state.scoring === "pairwise";
+      document.getElementById("promptOut").textContent = buildPrompt();
+      document.getElementById("scoreRange").textContent = pair ? "Use one token only: A or B." : "Use one word only: pass or fail.";
+      document.getElementById("scaleLabels").textContent = pair ? '["A", "B"]' : '["pass", "fail"]';
+      document.getElementById("why").innerHTML = buildWhy();
+      document.getElementById("runNotes").innerHTML = buildNotes().map(function (n) { return "<li>" + n + "</li>"; }).join("");
+      document.getElementById("cites").innerHTML = buildCites().map(function (k) {
+        var c = FRAME.citations[k];
+        if (!c) return "";
+        return '<li><a href="' + c.url + '" target="_blank" rel="noopener">' + c.title + "</a> - " + c.authors + ", " + c.year + "</li>";
+      }).join("");
+    }
+
+    render();
+  })();
+
+  (function () {
+    var COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>';
+    Array.prototype.slice.call(document.querySelectorAll(".codewrap")).forEach(function (wrap) {
+      var code = wrap.querySelector("code");
+      if (!code) return;
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "copy"; btn.setAttribute("aria-label", "Copy to clipboard");
+      btn.innerHTML = COPY + "<span>Copy</span>";
+      var timer;
+      function flash(ok) {
+        var label = btn.querySelector("span");
+        btn.classList.add("done"); btn.querySelector("svg").outerHTML = CHECK;
+        label.textContent = ok ? "Copied" : "Press ⌘C";
+        clearTimeout(timer);
+        timer = setTimeout(function () { btn.classList.remove("done"); btn.querySelector("svg").outerHTML = COPY; label.textContent = "Copy"; }, 1500);
+      }
+      btn.addEventListener("click", function () {
+        var text = code.textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { flash(true); }, fallback);
+        } else { fallback(); }
+        function fallback() {
+          try {
+            var ta = document.createElement("textarea");
+            ta.value = text; ta.setAttribute("readonly", "");
+            ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select();
+            var ok = document.execCommand("copy"); document.body.removeChild(ta); flash(ok);
+          } catch (e) { flash(false); }
+        }
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+</script>
+</body>
+</html>
