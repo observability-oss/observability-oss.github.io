@@ -267,10 +267,12 @@ export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
           <div class="pane" role="tabpanel" data-pane="copilot" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your keys <span class="dim">(<a href="https://observability.progress.com/api-keys" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">API Keys</a> · MCP reads traces · Integration sends them)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="acm_…"
 export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
-            <div class="pstep"><span class="pn">2</span><div class="pt">Copy the Copilot setup into your project <span class="dim">(adds <span class="icode">.vscode/</span> + <span class="icode">.github/</span>)</span><pre><code><span class="c"># run from YOUR project's root</span>
+            <div class="pstep"><span class="pn">2</span><div class="pt"><b>VS Code</b> - copy the Copilot setup into your project <span class="dim">(adds <span class="icode">.vscode/</span> + <span class="icode">.github/</span>)</span><pre><code><span class="c"># run from YOUR project's root</span>
 git clone https://github.com/observability-oss/progress-observability-plugin /tmp/po-plugin
 cp -r /tmp/po-plugin/copilot/. .</code></pre></div></div>
-            <div class="pstep"><span class="pn">3</span><div class="pt">Run prompts in Copilot Chat<pre><code>/instrument-agent
+            <div class="pstep"><span class="pn">2</span><div class="pt"><b>Copilot CLI</b> - it reads <span class="icode">.claude/skills/</span>, so use the skills directly <span class="dim">(no copilot/ bundle needed)</span><pre><code>mkdir -p .claude/skills
+cp -r /tmp/po-plugin/skills/* .claude/skills/</code></pre></div></div>
+            <div class="pstep"><span class="pn">3</span><div class="pt">Run prompts in Copilot Chat, or <span class="icode">copilot</span> in the terminal<pre><code>/instrument-agent
 /health-check</code></pre></div></div>
           </div>
           <div class="pane" role="tabpanel" data-pane="skill" hidden>
@@ -426,11 +428,15 @@ export OBSERVABILITY_API_KEY="ac_p_…"       <span class="c"># Integration key 
           </div>
 
           <div class="pane" role="tabpanel" data-pane="q-copilot" hidden>
-            <div class="step">2 - copy the Copilot setup into your project (adds .vscode/ + .github/)</div>
+            <div class="step">2 - VS Code: copy the Copilot setup into your project (adds .vscode/ + .github/)</div>
             <pre><code><span class="c"># run from YOUR project's root</span>
 git clone https://github.com/observability-oss/progress-observability-plugin /tmp/po-plugin
 cp -r /tmp/po-plugin/copilot/. .
 <span class="c"># then reload VS Code and start the progress-observability MCP server</span></code></pre>
+            <div class="step">2 - Copilot CLI: it discovers skills from .claude/skills/, so skip the bundle</div>
+            <pre><code>mkdir -p .claude/skills
+cp -r /tmp/po-plugin/skills/* .claude/skills/
+<span class="c"># or: copilot skill add /tmp/po-plugin/skills/instrument-agent</span></code></pre>
             <div class="step">3 - run a prompt in Copilot Chat (agent mode), or just ask</div>
             <pre><code>/instrument-agent
 /health-check
