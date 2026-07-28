@@ -277,9 +277,8 @@ copilot plugin install progress-observability@progress-observability</code></pre
           <div class="pane" role="tabpanel" data-pane="skill" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your keys <span class="dim">(<a href="https://observability.progress.com/api-keys" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">API Keys</a> · MCP reads traces · Integration sends them)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="acm_…"
 export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
-            <div class="pstep"><span class="pn">2</span><div class="pt">Any agent - Cursor, Codex, Cline, Amp <span class="dim">and ~70 more · needs Node 22+</span><pre><code>npx skills add observability-oss/progress-observability-plugin
-npx skills add observability-oss/progress-observability-plugin --all</code></pre>
-              <div class="dim" style="margin:8px 0 0;font-size:12.5px;">First prompts for which skills, second takes all seven. No terminal? Paste this in instead:</div>
+            <div class="pstep"><span class="pn">2</span><div class="pt">Any agent - Cursor, Codex, Cline, Amp <span class="dim">and ~70 more · needs Node 22+</span><pre><code>npx skills add observability-oss/progress-observability-plugin --all</code></pre>
+              <div class="dim" style="margin:8px 0 0;font-size:12.5px;">Installs all seven. Drop <span class="icode">--all</span> to pick. No terminal? Paste this in instead:</div>
               <pre><code><span class="c">"Install observability-oss/progress-observability-plugin from
 GitHub, use instrument-agent to add tracing to this app, then
 tell me what else I need to configure."</span></code></pre></div></div>
