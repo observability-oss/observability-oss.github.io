@@ -267,11 +267,13 @@ export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
           <div class="pane" role="tabpanel" data-pane="copilot" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your keys <span class="dim">(<a href="https://observability.progress.com/api-keys" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">API Keys</a> · MCP reads traces · Integration sends them)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="acm_…"
 export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
-            <div class="pstep"><span class="pn">2</span><div class="pt">Install the plugin <span class="dim">(one install covers both: plugins installed by Copilot CLI appear in VS Code automatically)</span><pre><code>copilot plugin marketplace add observability-oss/progress-observability-plugin
-copilot plugin install progress-observability@progress-observability</code></pre></div></div>
+            <div class="pstep"><span class="pn">2</span><div class="pt"><b>Copilot CLI</b> - install the plugin <span class="dim">(also lands in VS Code automatically)</span><pre><code>copilot plugin marketplace add observability-oss/progress-observability-plugin
+copilot plugin install progress-observability@progress-observability</code></pre><b>VS Code without the CLI</b> - add the marketplace, then Extensions → <span class="icode">@agentPlugins</span> → Install <span class="dim">(Agent Plugins is preview - needs <span class="icode">chat.plugins.enabled</span>)</span><pre><code><span class="c">// settings.json</span>
+"chat.plugins.marketplaces": ["observability-oss/progress-observability-plugin"]
+<span class="c"># older VS Code / plugins disabled - classic setup:</span>
+git clone https://github.com/observability-oss/progress-observability-plugin /tmp/po-plugin && cp -r /tmp/po-plugin/copilot/. .</code></pre></div></div>
             <div class="pstep"><span class="pn">3</span><div class="pt">Run prompts in Copilot Chat, or <span class="icode">copilot</span> in the terminal<pre><code>/instrument-agent
 /health-check</code></pre></div></div>
-            <p class="dim" style="margin:10px 0 0;font-size:12.5px">No Copilot CLI? In VS Code add <span class="icode">"chat.plugins.marketplaces": ["observability-oss/progress-observability-plugin"]</span> to settings.json, then Extensions → <span class="icode">@agentPlugins</span> → Install (Agent Plugins is preview - needs <span class="icode">chat.plugins.enabled</span>). Older VS Code / plugins disabled? Copy the classic setup instead: <span class="icode">git clone https://github.com/observability-oss/progress-observability-plugin /tmp/po-plugin && cp -r /tmp/po-plugin/copilot/. .</span></p>
           </div>
           <div class="pane" role="tabpanel" data-pane="skill" hidden>
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your keys <span class="dim">(<a href="https://observability.progress.com/api-keys" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">API Keys</a> · MCP reads traces · Integration sends them)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="acm_…"
@@ -426,13 +428,13 @@ export OBSERVABILITY_API_KEY="ac_p_…"       <span class="c"># Integration key 
           </div>
 
           <div class="pane" role="tabpanel" data-pane="q-copilot" hidden>
-            <div class="step">2 - install the plugin (covers Copilot CLI and VS Code - CLI installs appear in VS Code automatically)</div>
+            <div class="step">2 - Copilot CLI: install the plugin (also lands in VS Code automatically)</div>
             <pre><code>copilot plugin marketplace add observability-oss/progress-observability-plugin
 copilot plugin install progress-observability@progress-observability</code></pre>
-            <div class="step">no CLI? VS Code alone (Agent Plugins, preview):</div>
+            <div class="step">or VS Code without the CLI (Agent Plugins, preview - needs chat.plugins.enabled)</div>
             <pre><code><span class="c">// settings.json, then Extensions → @agentPlugins → Install</span>
 "chat.plugins.marketplaces": ["observability-oss/progress-observability-plugin"]
-<span class="c"># older VS Code or plugins disabled by your org - classic setup:</span>
+<span class="c"># older VS Code / plugins disabled - classic setup:</span>
 git clone https://github.com/observability-oss/progress-observability-plugin /tmp/po-plugin && cp -r /tmp/po-plugin/copilot/. .</code></pre>
             <div class="step">3 - run a prompt in Copilot Chat (agent mode), or just ask</div>
             <pre><code>/instrument-agent
@@ -440,7 +442,6 @@ git clone https://github.com/observability-oss/progress-observability-plugin /tm
 <span class="c">"what's driving my spend this week?"</span>
 <span class="c">"what should I evaluate next?"</span></code></pre>
           </div>
-
           <div class="pane" role="tabpanel" data-pane="q-skills" hidden>
             <div class="step">2 - install the skills · Cursor, Codex, Cline, Amp and ~70 more</div>
             <pre><code>npx skills add observability-oss/progress-observability-plugin</code></pre>
