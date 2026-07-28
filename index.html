@@ -93,7 +93,9 @@
 
   /* hero */
   .hero { padding: 54px 0 46px; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: 56px; align-items: center; }
+  /* the card holds 60-ch command lines; the text column only needs ~46ch for
+     the lede, so the spare width belongs to the card */
+  .hero-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 44px; align-items: center; }
   h1 { font-weight: 600; letter-spacing: -0.03em; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; margin: 14px 0 0; text-wrap: balance; }
   .lede { color: var(--muted); font-size: 16.5px; max-width: 46ch; margin: 18px 0 0; letter-spacing: -0.01em; }
   .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
@@ -276,11 +278,10 @@ copilot plugin install progress-observability@progress-observability</code></pre
             <div class="pstep"><span class="pn">1</span><div class="pt">Set your keys <span class="dim">(<a href="https://observability.progress.com/api-keys" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2)">API Keys</a> · MCP reads traces · Integration sends them)</span><pre><code>export OBSERVABILITY_MCP_API_KEY="acm_…"
 export OBSERVABILITY_API_KEY="ac_p_…"</code></pre></div></div>
             <div class="pstep"><span class="pn">2</span><div class="pt">Any agent - Cursor, Codex, Cline, Amp <span class="dim">and ~70 more</span><pre><code>npx skills add observability-oss/progress-observability-plugin</code></pre>
-              <div class="dim" style="margin:8px 0 0;font-size:12.5px;">No terminal? Paste this into the agent instead - it installs and runs in one go:</div>
-              <pre><code><span class="c">"Install the Progress Observability skills from
-https://github.com/observability-oss/progress-observability-plugin
-and use the instrument-agent skill to add tracing to this app.
-Then tell me what else I need to configure to use the other skills."</span></code></pre></div></div>
+              <div class="dim" style="margin:8px 0 0;font-size:12.5px;">No terminal? Paste this in instead - it installs and runs in one go:</div>
+              <pre><code><span class="c">"Install github.com/observability-oss/progress-observability-plugin
+use instrument-agent to add tracing to this app, then tell me
+what else I need to configure."</span></code></pre></div></div>
             <div class="pstep"><span class="pn">3</span><div class="pt">Then just ask, any time<pre><code><span class="c">"is my observability set up right?"</span>
 <span class="c">"why did checkout-agent stall in the last hour?"</span>
 <span class="c">"what's driving my spend this week?"</span></code></pre></div></div>
@@ -449,10 +450,9 @@ git clone https://github.com/observability-oss/progress-observability-plugin /tm
             <div class="step">2 - install the skills · Cursor, Codex, Cline, Amp and ~70 more</div>
             <pre><code>npx skills add observability-oss/progress-observability-plugin</code></pre>
             <div class="step">or, with no terminal - paste this into the agent and it does both</div>
-            <pre><code><span class="c">"Install the Progress Observability skills from
-https://github.com/observability-oss/progress-observability-plugin
-and use the instrument-agent skill to add tracing to this app.
-Then tell me what else I need to configure to use the other skills."</span></code></pre>
+            <pre><code><span class="c">"Install github.com/observability-oss/progress-observability-plugin
+use instrument-agent to add tracing to this app, then tell me
+what else I need to configure."</span></code></pre>
             <div class="step">3 - wire the MCP server in your tool, then ask in plain language</div>
             <pre><code><span class="c">"instrument this repo with progress observability"</span>
 <span class="c">"is my observability set up right?"</span>
