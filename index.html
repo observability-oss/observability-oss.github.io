@@ -448,7 +448,11 @@ git clone https://github.com/observability-oss/progress-observability-plugin /tm
           </div>
           <div class="pane" role="tabpanel" data-pane="q-skills" hidden>
             <div class="step">2 - install the skills · Cursor, Codex, Cline, Amp and ~70 more · needs Node 22+</div>
-            <pre><code>npx skills add observability-oss/progress-observability-plugin</code></pre>
+            <pre><code>npx skills add observability-oss/progress-observability-plugin
+<span class="c"># prompts for which skills. Unattended:</span>
+npx skills add observability-oss/progress-observability-plugin --all
+<span class="c"># or just the one that writes code - no MCP key needed:</span>
+npx skills add observability-oss/progress-observability-plugin --skill instrument-agent -y</code></pre>
             <div class="step">or, with no terminal - paste this into the agent and it does both</div>
             <pre><code><span class="c">"Install github.com/observability-oss/progress-observability-plugin
 use instrument-agent to add tracing to this app, then tell me
