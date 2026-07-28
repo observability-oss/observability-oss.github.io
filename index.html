@@ -309,14 +309,15 @@ tell me what else I need to configure."</span></code></pre></div></div>
               <span class="tagpill">Claude Code</span>
               <span class="tagpill">Copilot</span>
             </div>
-            <p class="desc">Four read-only workflows over the Progress Observability MCP server - trace triage, cost and usage reports, eval coverage gaps, and LLM-as-a-Judge eval generation grounded in your real traces - plus <b>health-check</b>, a setup diagnostic you run first, <b>instrument-agent</b>, which retrofits observability onto the agent you already have and verifies traces arrive, and <b>scaffold-agent</b>, which creates a new instrumented .NET agent from the starter template.</p>
+            <p class="desc"><b>instrument-agent</b> retrofits observability onto the agent you already have - Python, TypeScript, or .NET - and verifies the traces arrive; <b>scaffold-agent</b> creates a new instrumented .NET agent from the starter template. Once traces are flowing, <b>health-check</b> confirms the wiring and four read-only workflows run over the Progress Observability MCP server: trace triage, cost and usage reports, eval coverage gaps, and LLM-as-a-Judge eval generation grounded in your real traces.</p>
             <div class="chips">
+              <span class="chip">/instrument-agent</span>
+              <span class="chip">/scaffold-agent</span>
+              <span class="chip">/health-check</span>
               <span class="chip">/trace-triage</span>
               <span class="chip">/cost-report</span>
               <span class="chip">/coverage-gaps</span>
               <span class="chip">/eval-from-trace</span>
-              <span class="chip">/health-check</span>
-              <span class="chip">/scaffold-agent</span>
             </div>
             <p class="ways">Run it three ways - a <b>Claude Code</b> plugin, a <b>VS Code / Copilot</b> setup, or <b>any agent</b> via <span style="font-family:var(--mono);font-size:13px">npx skills</span>. Install steps below.</p>
             <div class="links">
