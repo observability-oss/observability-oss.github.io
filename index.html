@@ -337,12 +337,6 @@ tell me what else I need to configure."</span></code></pre></div></div>
         <h2>Each does one job well</h2>
         <p>Use them through the plugin, or lift a single skill into any agent. All treat trace content as untrusted data; only the two setup skills write files.</p>
       </div>
-      <div class="grid">
-        <a class="card" href="./docs.html#trace-triage"><span class="cmd">/trace-triage</span><h3>Root-cause a run</h3><p>Walk a failed or slow run's span tree, find the fault, hand back a diagnosis and a fix.</p></a>
-        <a class="card" href="./docs.html#cost-report"><span class="cmd">/cost-report</span><h3>Watch the spend</h3><p>Cost by model, app, and day; quota burn; and what drove a spike - decision-ready.</p></a>
-        <a class="card" href="./docs.html#coverage-gaps"><span class="cmd">/coverage-gaps</span><h3>Find the blind spots</h3><p>Which production behaviors have no eval measuring them, ranked by what to build first.</p></a>
-        <a class="card" href="./docs.html#generate-eval"><span class="cmd">/eval-from-trace</span><h3>Build the judge</h3><p>Research-grounded LLM-as-a-Judge evaluator prompts, grounded in your real traces.</p></a>
-      </div>
       <a class="setup-card" href="./docs.html#instrument-agent">
         <div>
           <span class="cmd">/instrument-agent</span>
@@ -363,10 +357,16 @@ tell me what else I need to configure."</span></code></pre></div></div>
         <div>
           <span class="cmd">/health-check</span>
           <h3>Check your setup</h3>
-          <p>Read-only diagnostic - connection, key scope, whether traces are flowing, and how deep your instrumentation goes. The four above chain into a loop; this one you run first.</p>
+          <p>Read-only diagnostic - connection, key scope, whether traces are flowing, and how deep your instrumentation goes. The four below chain into a loop; this one you run first.</p>
         </div>
         <span class="setup-tag">Setup · run first</span>
       </a>
+      <div class="grid">
+        <a class="card" href="./docs.html#trace-triage"><span class="cmd">/trace-triage</span><h3>Root-cause a run</h3><p>Walk a failed or slow run's span tree, find the fault, hand back a diagnosis and a fix.</p></a>
+        <a class="card" href="./docs.html#cost-report"><span class="cmd">/cost-report</span><h3>Watch the spend</h3><p>Cost by model, app, and day; quota burn; and what drove a spike - decision-ready.</p></a>
+        <a class="card" href="./docs.html#coverage-gaps"><span class="cmd">/coverage-gaps</span><h3>Find the blind spots</h3><p>Which production behaviors have no eval measuring them, ranked by what to build first.</p></a>
+        <a class="card" href="./docs.html#generate-eval"><span class="cmd">/eval-from-trace</span><h3>Build the judge</h3><p>Research-grounded LLM-as-a-Judge evaluator prompts, grounded in your real traces.</p></a>
+      </div>
       <p style="margin-top:22px;font-size:14.5px;"><a href="./docs.html" style="border-bottom:1px solid var(--line-2);padding-bottom:1px;">Docs - how each skill works, what it reads, and how to run it →</a> · <a href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line-2);padding-bottom:1px;">Skill source on GitHub →</a> · <a href="./eval-builder.html" style="border-bottom:1px solid var(--line-2);padding-bottom:1px;">Free eval builder - try the judge frame in your browser →</a></p>
     </div>
   </section>

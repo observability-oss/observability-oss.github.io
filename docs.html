@@ -170,8 +170,8 @@
       <nav>
         <a href="#overview">Overview</a>
         <a href="#model">The shared model</a>
-        <a class="sub" href="#scaffold-agent">scaffold-agent</a>
         <a class="sub" href="#instrument-agent">instrument-agent</a>
+        <a class="sub" href="#scaffold-agent">scaffold-agent</a>
         <a class="sub" href="#health-check">health-check</a>
         <a class="sub" href="#trace-triage">trace-triage</a>
         <a class="sub" href="#cost-report">cost-report</a>
@@ -249,45 +249,6 @@
         </div>
       </section>
 
-      <section id="scaffold-agent">
-        <div class="skill-title">
-          <h2>scaffold-agent</h2>
-          <div class="cmds"><span class="chip">/scaffold-agent</span></div>
-          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/scaffold-agent" target="_blank" rel="noopener">Source ↗</a>
-        </div>
-        <p class="lead">Create a new .NET agent project for your domain with the observability wiring already in place, starting from the <a class="inline" href="https://github.com/observability-oss/dotnet-agent-starter" target="_blank" rel="noopener">dotnet-agent-starter</a> template.</p>
-        <p><strong>This skill writes files.</strong> It creates a project on disk and makes no MCP calls at all. Its sibling <a class="inline" href="#instrument-agent">instrument-agent</a> covers the other case: observability for an agent that already exists.</p>
-
-        <h3>When to use</h3>
-        <p>Starting something new - "build me an agent that triages support tickets", "scaffold a .NET agent with observability", "new agent project from the template". Not for instrumenting an existing app.</p>
-
-        <h3>How it works</h3>
-        <ol>
-          <li><strong>Gather the domain</strong> - what the agent does, the 2–4 actions it needs, whether it answers from documents, and a short name.</li>
-          <li><strong>Fetch the template</strong> at its newest release tag, then drop the <code>.git</code> folder.</li>
-          <li><strong>Fill the marked slots</strong> - app name, system prompt, tools, corpus. Nothing else is touched.</li>
-          <li><strong>Verify</strong> with <code>dotnet build</code> before reporting success.</li>
-        </ol>
-        <p>Generated tools are working stubs over plausible in-memory data, each with a <code>[Description]</code> the model selects on, and at least one honest not-found path - so the new agent emits real tool-call spans immediately and <code>trace-triage</code> has something to walk.</p>
-        <div class="callout">
-          <span class="k">If the clone fails</span>
-          <p>It stops and gives you the command to run yourself, rather than rebuilding the template from memory. Subtly wrong wiring or package versions would be worse than no scaffold at all.</p>
-        </div>
-
-        <h3>Never changes</h3>
-        <div class="pills"><span class="pill">observability wiring</span><span class="pill">pinned package versions</span><span class="pill">config layering</span><span class="pill">UserSecretsId</span></div>
-
-        <h3>Returns</h3>
-        <p>A project that compiles, plus the handoff: the <code>dotnet user-secrets</code> commands for your Azure OpenAI settings and the Progress <em>Integration</em> key, <code>dotnet run</code>, and then <code>/health-check</code> - after which the platform-reading skills work against your own agent.</p>
-
-        <h3>Run it</h3>
-        <div class="codewrap"><pre><code><span class="c">// Claude Code</span>
-/scaffold-agent an agent that triages support tickets against our KB
-
-<span class="c">// Copilot Chat</span>
-/scaffold-agent</code></pre></div>
-      </section>
-
       <section id="instrument-agent">
         <div class="skill-title">
           <h2>instrument-agent</h2>
@@ -325,6 +286,45 @@
 
 <span class="c">// Copilot Chat</span>
 /instrument-agent</code></pre></div>
+      </section>
+
+      <section id="scaffold-agent">
+        <div class="skill-title">
+          <h2>scaffold-agent</h2>
+          <div class="cmds"><span class="chip">/scaffold-agent</span></div>
+          <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/scaffold-agent" target="_blank" rel="noopener">Source ↗</a>
+        </div>
+        <p class="lead">Create a new .NET agent project for your domain with the observability wiring already in place, starting from the <a class="inline" href="https://github.com/observability-oss/dotnet-agent-starter" target="_blank" rel="noopener">dotnet-agent-starter</a> template.</p>
+        <p><strong>This skill writes files.</strong> It creates a project on disk and makes no MCP calls at all. Its sibling <a class="inline" href="#instrument-agent">instrument-agent</a> covers the other case: observability for an agent that already exists.</p>
+
+        <h3>When to use</h3>
+        <p>Starting something new - "build me an agent that triages support tickets", "scaffold a .NET agent with observability", "new agent project from the template". Not for instrumenting an existing app.</p>
+
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Gather the domain</strong> - what the agent does, the 2–4 actions it needs, whether it answers from documents, and a short name.</li>
+          <li><strong>Fetch the template</strong> at its newest release tag, then drop the <code>.git</code> folder.</li>
+          <li><strong>Fill the marked slots</strong> - app name, system prompt, tools, corpus. Nothing else is touched.</li>
+          <li><strong>Verify</strong> with <code>dotnet build</code> before reporting success.</li>
+        </ol>
+        <p>Generated tools are working stubs over plausible in-memory data, each with a <code>[Description]</code> the model selects on, and at least one honest not-found path - so the new agent emits real tool-call spans immediately and <code>trace-triage</code> has something to walk.</p>
+        <div class="callout">
+          <span class="k">If the clone fails</span>
+          <p>It stops and gives you the command to run yourself, rather than rebuilding the template from memory. Subtly wrong wiring or package versions would be worse than no scaffold at all.</p>
+        </div>
+
+        <h3>Never changes</h3>
+        <div class="pills"><span class="pill">observability wiring</span><span class="pill">pinned package versions</span><span class="pill">config layering</span><span class="pill">UserSecretsId</span></div>
+
+        <h3>Returns</h3>
+        <p>A project that compiles, plus the handoff: the <code>dotnet user-secrets</code> commands for your Azure OpenAI settings and the Progress <em>Integration</em> key, <code>dotnet run</code>, and then <code>/health-check</code> - after which the platform-reading skills work against your own agent.</p>
+
+        <h3>Run it</h3>
+        <div class="codewrap"><pre><code><span class="c">// Claude Code</span>
+/scaffold-agent an agent that triages support tickets against our KB
+
+<span class="c">// Copilot Chat</span>
+/scaffold-agent</code></pre></div>
       </section>
 
       <section id="health-check">
