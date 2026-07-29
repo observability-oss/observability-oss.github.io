@@ -202,7 +202,7 @@
 
       <section id="model">
         <h2>The shared model</h2>
-        <p class="lead">Everything below rides on one MCP server. Understanding it once explains how the platform-reading skills behave - <code>scaffold-agent</code> is the exception and makes no MCP calls at all; <code>instrument-agent</code> writes code but touches MCP only to verify traces arrived.</p>
+        <p class="lead">Everything below rides on one MCP server. Understanding it once explains how the platform-reading skills behave - <code>scaffold-agent</code> and <code>instrument-agent</code> are the exceptions: they write code and make no MCP calls at all, leaving trace confirmation to <code>health-check</code>.</p>
 
         <h3>Connection</h3>
         <p>A remote, read-only MCP endpoint at <code>https://mcp.observability.progress.com/mcp</code>. The plugin's <code>.mcp.json</code> authenticates with an <code>X-Api-Key</code> header, sourced from the <code>OBSERVABILITY_MCP_API_KEY</code> environment variable. What you can read is scoped by that key.</p>
@@ -255,8 +255,8 @@
           <div class="cmds"><span class="chip">/instrument-agent</span></div>
           <a class="src" href="https://github.com/observability-oss/progress-observability-plugin/tree/main/skills/instrument-agent" target="_blank" rel="noopener">Source ↗</a>
         </div>
-        <p class="lead">Retrofit Progress Observability onto an agent you already have - Python, TypeScript/JavaScript, or .NET - with the smallest possible diff, then verify over MCP that spans actually reached the platform. The mirror image of <a class="inline" href="#scaffold-agent">scaffold-agent</a>.</p>
-        <p><strong>This skill writes code</strong> - the instrumentation edits and nothing else. Its MCP use is read-only: one check that the traces arrived.</p>
+        <p class="lead">Retrofit Progress Observability onto an agent you already have - Python, TypeScript/JavaScript, or .NET - with the smallest possible diff, then run it once so spans start flowing. The mirror image of <a class="inline" href="#scaffold-agent">scaffold-agent</a>.</p>
+        <p><strong>This skill writes code</strong> - the instrumentation edits and nothing else. It makes no MCP calls: confirming the traces arrived is left to <a class="inline" href="#health-check">health-check</a>.</p>
 
         <h3>When to use</h3>
         <p>An existing project that isn't on the platform yet - "instrument my agent", "add observability to this repo", "connect this to Progress Observability" - or when traces should be flowing and aren't.</p>
@@ -266,19 +266,19 @@
           <li><strong>Detect</strong> - language, LLM SDKs and frameworks in use, any existing telemetry, and how the app takes config. It reports the planned diff before editing anything.</li>
           <li><strong>Wire</strong> - per a verified language reference: <code>progress-observability</code> (PyPI), <code>@progress/observability</code> (npm), or <code>Progress.Observability.Instrumentation</code> (NuGet). Init at process start, before any LLM client exists; Integration key from config, never hardcoded; flush on exit.</li>
           <li><strong>Run once</strong> - with a keyless path available: decorated or wrapped functions emit real spans with no LLM credentials, so the pipeline can be proven before model keys exist.</li>
-          <li><strong>Verify</strong> - <code>list_observations</code> scoped to the minutes since the run, reporting <em>instrumentation depth</em> (LLM spans, tool calls, workflow structure), not just arrival.</li>
+          <li><strong>Hand off</strong> - no platform read: it reports the wiring, points you at the trace explorer for your <code>app_name</code>, and notes that <code>/health-check</code> confirms arrival over MCP when you want it.</li>
         </ol>
         <p>Auto-instrumentation covers 30+ integrations - OpenAI, Anthropic, Azure OpenAI, Bedrock, Vertex, Mistral, Groq, Ollama, Cohere, WatsonX and more; LangChain, LlamaIndex, CrewAI, Haystack, OpenAI Agents, MCP; the major vector stores - plus <b>any OpenAI-compatible endpoint</b> (OpenRouter, LiteLLM, vLLM, gateways), which needs nothing but a base URL. The full list ships in the skill's references, extracted from the SDKs themselves. Anything genuinely uncovered gets explicit structure via decorators or a span wrapper, and the skill says plainly which of the two it's doing rather than implying coverage it lacks.</p>
         <div class="callout">
           <span class="k">Two keys, two jobs</span>
-          <p>The app gets the <em>Integration</em> key (<code>ac_p_…</code>) via config; the verify step reads with the <em>MCP</em> key (<code>acm_…</code>) from the coding agent's environment. Mixing them up is the most common "no traces" cause after init ordering.</p>
+          <p>The app gets the <em>Integration</em> key (<code>ac_p_…</code>) via config; the read-only skills - <code>health-check</code> and the rest - read with the <em>MCP</em> key (<code>acm_…</code>) from the coding agent's environment. Mixing them up is the most common "no traces" cause after init ordering.</p>
         </div>
 
         <h3>Tested against real fixtures</h3>
         <p>Three fixture repos - Python, TypeScript, and .NET - hold deliberately uninstrumented agents, the expected result after the skill runs, and a harness that verifies over MCP that spans actually landed. Every Monday, CI runs seven end-to-end jobs against the live platform and an automated session re-applies the skill to every fixture and grades the result - so the instructions can't silently rot.</p>
 
         <h3>Returns</h3>
-        <p>A minimal diff (dependency, init, config wiring, flush), a confirmation that spans arrived with their observed depth, and - when something doesn't arrive - the specific cause to check: init ordering, key type, or a missing flush.</p>
+        <p>A minimal diff (dependency, init, config wiring, flush), a run that emits at least one trace, and a hand-off telling you where to see the traces and how to confirm them with <code>/health-check</code> - plus, if a run misbehaves, the usual causes to check: init ordering, key type, or a missing flush.</p>
 
         <h3>Run it</h3>
         <div class="codewrap"><pre><code><span class="c">// Claude Code</span>

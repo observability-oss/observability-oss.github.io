@@ -309,7 +309,7 @@ tell me what else I need to configure."</span></code></pre></div></div>
               <span class="tagpill">Claude Code</span>
               <span class="tagpill">Copilot</span>
             </div>
-            <p class="desc"><b>instrument-agent</b> retrofits observability onto the agent you already have - Python, TypeScript, or .NET - and verifies the traces arrive; <b>scaffold-agent</b> creates a new instrumented .NET agent from the starter template. Once traces are flowing, <b>health-check</b> confirms the wiring and four read-only workflows run over the Progress Observability MCP server: trace triage, cost and usage reports, eval coverage gaps, and LLM-as-a-Judge eval generation grounded in your real traces.</p>
+            <p class="desc"><b>instrument-agent</b> retrofits observability onto the agent you already have - Python, TypeScript, or .NET; <b>scaffold-agent</b> creates a new instrumented .NET agent from the starter template. Once traces are flowing, <b>health-check</b> confirms the wiring and four read-only workflows run over the Progress Observability MCP server: trace triage, cost and usage reports, eval coverage gaps, and LLM-as-a-Judge eval generation grounded in your real traces.</p>
             <div class="chips">
               <span class="chip">/instrument-agent</span>
               <span class="chip">/scaffold-agent</span>
@@ -342,7 +342,7 @@ tell me what else I need to configure."</span></code></pre></div></div>
         <div>
           <span class="cmd">/instrument-agent</span>
           <h3>Instrument the agent you already have</h3>
-          <p>Detects the language and framework - Python, TypeScript, or .NET - wires the Progress SDK with the smallest possible diff, then verifies over MCP that spans actually arrived. The mirror image of <b>scaffold-agent</b>.</p>
+          <p>Detects the language and framework - Python, TypeScript, or .NET - wires the Progress SDK with the smallest possible diff, then runs it once so spans start flowing and hands off to <b>health-check</b> to confirm them. The mirror image of <b>scaffold-agent</b>.</p>
         </div>
         <span class="setup-tag">Setup · start here</span>
       </a>
