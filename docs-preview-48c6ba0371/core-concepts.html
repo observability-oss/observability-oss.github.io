@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Core Concepts · Progress Observability Platform (preview)</title>
+<style>
+:root{--brand:#0d6efd;--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;
+--line:#242a31;--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}}
+:root[data-theme=dark]{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;--line:#242a31;
+--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}
+:root[data-theme=light]{--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);color:var(--fg)}
+.banner{background:var(--brand);color:#fff;text-align:center;padding:.45rem 1rem;font-size:.85rem}
+.banner a{color:#fff}
+.layout{display:flex;max-width:1200px;margin:0 auto}
+nav.side{width:250px;flex-shrink:0;padding:1.5rem 1rem;border-right:1px solid var(--line);
+background:var(--side-bg);min-height:calc(100vh - 40px)}
+nav.side .grp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin:1.2rem 0 .35rem;font-weight:600}
+nav.side a{display:block;padding:.28rem .6rem;border-radius:6px;color:var(--fg);
+text-decoration:none;font-size:.9rem}
+nav.side a:hover{background:var(--hover)}
+nav.side a.on{background:var(--brand);color:#fff}
+main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+main h1{font-size:2rem;margin:.2rem 0 1rem}
+main h2{font-size:1.35rem;margin-top:2.2rem;padding-top:.6rem;border-top:1px solid var(--line)}
+main h3{font-size:1.08rem;margin-top:1.6rem}
+main a{color:var(--brand)}
+code{background:var(--code-bg);padding:.12em .35em;border-radius:4px;font-size:.86em;
+font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+padding:1rem;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:.83rem}
+blockquote{margin:1rem 0;padding:.7rem 1rem;background:var(--note-bg);
+border-left:3px solid var(--note-line);border-radius:0 8px 8px 0}
+blockquote p{margin:.2rem 0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.tabs{margin:1rem 0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabbar{display:flex;background:var(--code-bg);border-bottom:1px solid var(--line)}
+.tabbar button{border:0;background:none;padding:.55rem 1.1rem;cursor:pointer;
+color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
+.tabbar button.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab{display:none;padding:.2rem 1.2rem 1rem}
+.tab.on{display:block}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+color:var(--muted);font-size:.82rem}
+@media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
+border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head><body>
+<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="layout">
+<nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html" class="on">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
+<main>
+<h1>Core Concepts</h1>
+<h2>Observations</h2>
+<p>The <strong>Observations</strong> page shows all traces sent by your instrumented applications. A trace represents one end-to-end execution — for example, a user asking your agent a question and receiving a response.</p>
+<p>Each trace contains one or more spans. A span is a single unit of work such as an LLM call, a tool invocation, or a custom operation you defined with a decorator.</p>
+<p>You can filter observations by time range, application name, tags, and status. Click any trace to open a detailed timeline view showing the full span tree, token counts, latencies, and input/output content.</p>
+<h2>LLM Requests</h2>
+<p>The <strong>LLM Requests</strong> page provides a real-time stream of individual LLM calls across all your instrumented applications. Use it when you need to:</p>
+<ul>
+<li>Monitor live production traffic</li>
+<li>Spot errors or slow responses as they happen</li>
+<li>Inspect the exact prompts and completions for a specific call</li>
+</ul>
+<h2>Cost Analytics</h2>
+<p><strong>Cost Analytics</strong> dashboard aggregates token usage and estimated costs across your organization. The platform automatically calculates costs based on the model and provider reported in each span.</p>
+<p>Use cost analytics to:</p>
+<ul>
+<li>Track spending trends over time</li>
+<li>Compare costs across models (for example, GPT-4.1 versus GPT-4.1-mini)</li>
+<li>Identify which applications or workflows are most expensive</li>
+<li>Set usage expectations for your team</li>
+</ul>
+<h2>Evaluation Tasks</h2>
+<p><strong>Evaluation tasks</strong> let you assess the quality of your AI agent's outputs using an LLM-as-a-Judge approach. You define what to evaluate, choose an evaluator template, and the platform runs the evaluation automatically.</p>
+<p>There are two types of evaluation tasks:</p>
+<ul>
+<li>Historical — Evaluate traces that have already been collected. Useful for batch quality checks and regression testing.</li>
+<li>Real-time — Continuously evaluate new traces as they arrive. Useful for ongoing production monitoring.</li>
+</ul>
+<p>To create an evaluation task, use the wizard at <strong>Evaluation Tasks</strong> &gt; <strong>Create New</strong>. You will:</p>
+<ol>
+<li>Choose a name and data type (Historical or Real-time)</li>
+<li>Select which traces to evaluate (by time range, app name, or tags)</li>
+<li>Pick an evaluator template (or create a custom one)</li>
+<li>Configure evaluator parameters</li>
+<li>Run the task</li>
+</ol>
+<h2>Evaluator Templates</h2>
+<p>An <strong>evaluator template</strong> defines how an LLM judge scores your agent's output. Each template contains:</p>
+<ul>
+<li>A system prompt — instructions for the judge LLM</li>
+<li>Scoring criteria — what constitutes a good or bad response</li>
+<li>An LLM integration — which model to use as the judge</li>
+</ul>
+<p>The platform includes built-in templates for common quality dimensions such as relevance, helpfulness, and safety. You can also create custom templates tailored to your domain.</p>
+<h2>Scores</h2>
+<p>The <strong>Scores</strong> page shows evaluation results across all your completed and active evaluation tasks. Each score includes the evaluator's verdict, a numeric rating, and an explanation.</p>
+<p>Use scores to:</p>
+<ul>
+<li>Track quality trends over time</li>
+<li>Compare different agent versions or prompt strategies</li>
+<li>Identify specific traces that scored poorly for debugging</li>
+</ul>
+<h2>API Keys</h2>
+<p>The platform has <strong>two kinds of API key</strong>, and they are not interchangeable:</p>
+<ul>
+<li><strong>Integration keys</strong> (prefix <code>ac_p_</code>) — used by the SDKs to send traces to
+  the collector. These go in your application's environment.</li>
+<li><strong>MCP keys</strong> (prefix <code>acm_</code>) — read-only keys used by AI clients to query
+  the platform over the <a href="mcp.html">MCP server</a>. These never go in your
+  application.</li>
+</ul>
+<p>A key of the wrong type fails silently: the SDK initializes normally and the
+app runs, but nothing arrives on the platform. If traces are missing, checking
+the key prefix is the first step.</p>
+<p>Every trace your application sends must include a valid Integration key.</p>
+<p>To create an API key:</p>
+<ol>
+<li>Go to <strong>API Keys</strong> in the left sidebar</li>
+<li>Click <strong>Create API Key</strong></li>
+<li>Give it a descriptive name (for example, "production-agent-v2")</li>
+<li>Copy and store the key securely — it is shown only once</li>
+</ol>
+<p>Each API key is scoped to your organization. You can create multiple keys to separate environments (development, staging, production) or teams.</p>
+<h2>Units</h2>
+<p>A unit is the basic measure of usage in the Progress Observability Platform.</p>
+<ul>
+<li>1 telemetry span = 1 unit</li>
+<li>1 evaluation = 2 units</li>
+</ul>
+<p>Telemetry spans come from SDK traces such as LLM calls, tool invocations,
+agents, workflows, and custom spans.</p>
+<p>Each evaluation run uses an LLM-as-a-Judge and generates two internal spans,
+so evaluating one trace consumes 2 units regardless of how many spans that
+trace contains.</p>
+<p>To control unit consumption from the SDK side, reduce span volume: enable only
+the instruments you need (<code>instruments</code> / <code>block_instruments</code>), and avoid
+adding manual spans to steps that auto-instrumentation already covers.</p>
+<h2>LLM Integrations</h2>
+<p><strong>LLM integrations</strong> connect external LLM providers (such as OpenAI, Azure OpenAI, or Anthropic) to the platform for use in evaluation tasks. When you run an evaluation, the platform calls the configured LLM integration to act as the judge.</p>
+<blockquote>
+<p>LLM integrations are only used by the platform for evaluations. Your application's own LLM calls are instrumented by the SDK independently.</p>
+</blockquote>
+<h2>See Also</h2>
+<ul>
+<li><a href="getting-started.html">Get started with setup and first traces</a></li>
+<li><a href="mcp.html">Connect AI clients with the MCP server</a></li>
+<li><a href="troubleshooting.html">Troubleshoot setup and telemetry issues</a></li>
+</ul>
+<footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){
+  var tabs=[].slice.call(t.querySelectorAll(':scope > .tab'));
+  if(!tabs.length)return;
+  var bar=document.createElement('div');bar.className='tabbar';
+  tabs.forEach(function(p,i){
+    var b=document.createElement('button');b.textContent=p.dataset.title||('Tab '+(i+1));
+    b.onclick=function(){tabs.forEach(function(q){q.classList.remove('on')});
+      bar.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      p.classList.add('on');b.classList.add('on');};
+    bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
+  });
+  t.insertBefore(bar,t.firstChild);
+});
+</script>
+</body></html>

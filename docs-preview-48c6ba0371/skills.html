@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Agent Skills · Progress Observability Platform (preview)</title>
+<style>
+:root{--brand:#0d6efd;--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;
+--line:#242a31;--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}}
+:root[data-theme=dark]{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;--line:#242a31;
+--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}
+:root[data-theme=light]{--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);color:var(--fg)}
+.banner{background:var(--brand);color:#fff;text-align:center;padding:.45rem 1rem;font-size:.85rem}
+.banner a{color:#fff}
+.layout{display:flex;max-width:1200px;margin:0 auto}
+nav.side{width:250px;flex-shrink:0;padding:1.5rem 1rem;border-right:1px solid var(--line);
+background:var(--side-bg);min-height:calc(100vh - 40px)}
+nav.side .grp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin:1.2rem 0 .35rem;font-weight:600}
+nav.side a{display:block;padding:.28rem .6rem;border-radius:6px;color:var(--fg);
+text-decoration:none;font-size:.9rem}
+nav.side a:hover{background:var(--hover)}
+nav.side a.on{background:var(--brand);color:#fff}
+main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+main h1{font-size:2rem;margin:.2rem 0 1rem}
+main h2{font-size:1.35rem;margin-top:2.2rem;padding-top:.6rem;border-top:1px solid var(--line)}
+main h3{font-size:1.08rem;margin-top:1.6rem}
+main a{color:var(--brand)}
+code{background:var(--code-bg);padding:.12em .35em;border-radius:4px;font-size:.86em;
+font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+padding:1rem;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:.83rem}
+blockquote{margin:1rem 0;padding:.7rem 1rem;background:var(--note-bg);
+border-left:3px solid var(--note-line);border-radius:0 8px 8px 0}
+blockquote p{margin:.2rem 0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.tabs{margin:1rem 0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabbar{display:flex;background:var(--code-bg);border-bottom:1px solid var(--line)}
+.tabbar button{border:0;background:none;padding:.55rem 1.1rem;cursor:pointer;
+color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
+.tabbar button.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab{display:none;padding:.2rem 1.2rem 1rem}
+.tab.on{display:block}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+color:var(--muted);font-size:.82rem}
+@media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
+border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head><body>
+<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="layout">
+<nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html" class="on">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
+<main>
+<h1>Agent Skills</h1>
+<p>Progress Observability ships a set of <strong>agent skills</strong> - self-contained instructions that
+teach AI coding agents (Claude Code, GitHub Copilot, and other skill-compatible
+clients) how to work with the platform. Each skill is a plain directory with a
+<code>SKILL.md</code> file, installable individually or together, from the public
+<a href="https://github.com/telerik/observability-skills"><code>telerik/observability-skills</code></a>
+repository.</p>
+<h2>Available Skills</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Answers</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>instrument-agent</code></td>
+<td>Get my existing agent onto the platform</td>
+<td>Adds Progress Observability instrumentation to an existing Python, TypeScript/JavaScript, or .NET agent, then hands off to confirm traces at observability.progress.com</td>
+</tr>
+<tr>
+<td><code>health-check</code></td>
+<td>Is my observability wired up correctly?</td>
+<td>Verifies that a project's Progress Observability setup is wired up correctly - connection, key scope, and whether traces are flowing</td>
+</tr>
+<tr>
+<td><code>trace-triage</code></td>
+<td>Why did this run fail, stall, or misbehave?</td>
+<td>Investigates why an AI agent run failed, stalled, or misbehaved by walking its trace</td>
+</tr>
+<tr>
+<td><code>cost-report</code></td>
+<td>What am I spending, and what's driving it?</td>
+<td>Reports and explains LLM spend and usage, broken down by model, app, or day</td>
+</tr>
+<tr>
+<td><code>coverage-gaps</code></td>
+<td>Which behaviors run in production with no eval?</td>
+<td>Finds which of an AI system's behaviors run in production but have no evaluation measuring them</td>
+</tr>
+<tr>
+<td><code>generate-eval</code></td>
+<td>How do I build an eval for a behavior?</td>
+<td>Generates a research-grounded LLM-as-a-Judge evaluator prompt, optionally grounded in real production traces</td>
+</tr>
+</tbody>
+</table>
+<p>All skills except <code>instrument-agent</code> read the platform over the <a href="mcp.html">MCP server</a>.
+<code>instrument-agent</code> only writes instrumentation code and never reads data back, so it
+needs no MCP server or MCP key.</p>
+<p>They share one design rule: <strong>read, don't act.</strong> Every tool the platform-reading
+skills call is read-only, they default to metadata over raw trace content, and they
+treat anything pulled from a trace as untrusted data - never as instructions.</p>
+<p>Four of the skills also chain into a loop, each stage's output feeding the next:</p>
+<ol>
+<li><strong>trace-triage</strong> - a run fails; find the failure signature in the spans.</li>
+<li><strong>coverage-gaps</strong> - confirm nothing measures that behavior yet.</li>
+<li><strong>generate-eval</strong> - build the judge that catches it going forward.</li>
+<li><strong>cost-report</strong> - watch spend while you iterate on the fix.</li>
+</ol>
+<p>You don't have to run them in order - each stands alone - but run end to end, they
+take you from a single broken trace to a durable eval without leaving your editor.</p>
+<h2>Install a Skill</h2>
+<p>Use the <code>skills</code> CLI to add a skill straight from the repository:</p>
+<pre><code class="language-bash">npx skills add telerik/observability-skills --skill instrument-agent
+</code></pre>
+<p>Or if you want to add all skills in the table above, do:</p>
+<pre><code class="language-bash">npx skills add telerik/observability-skills
+</code></pre>
+<h3>Manual install</h3>
+<p>Skills are plain directories, so you can also clone the skills repository and copy the ones you want directly into
+the location your agent reads:</p>
+<pre><code class="language-bash"># Claude Code
+cp -r skills/instrument-agent ~/.claude/skills/
+
+# GitHub Copilot CLI
+cp -r skills/instrument-agent ~/.github/skills/
+</code></pre>
+<p>Drop them into a project's <code>.claude/skills/</code> or <code>.github/skills/</code> folder instead to
+scope the install to that repository.</p>
+<h2>Configuration</h2>
+<p>Skills that read the platform need an <strong>MCP key</strong> (starting with <code>acm_…</code>); <code>instrument-agent</code> needs
+an <strong>Integration key</strong> (starting with <code>ac_p_…</code>) at runtime for the app it instruments. See
+<a href="mcp.html">MCP Server</a> for how to create and scope an MCP key. Set keys as
+environment variables or in your MCP client configuration - never paste a key
+directly into a chat session.</p>
+<h2>Skill Details</h2>
+<p>Each skill below lists when to use it, what it does step by step, which MCP tools
+it calls (see <a href="mcp.html">MCP Server</a> for the full contract), and what it returns.</p>
+<h3>instrument-agent</h3>
+<p><strong>When to use:</strong> an existing project that isn't on the platform yet - "instrument my
+agent", "add observability to this repo", "connect this to Progress Observability" -
+or when traces should be flowing and aren't.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><strong>Detect</strong> - language, LLM SDKs and frameworks in use, any existing telemetry, and
+   how the app takes config. Reports the planned diff before editing anything.</li>
+<li><strong>Wire</strong> - installs the verified SDK for the language (<code>progress-observability</code> on
+   PyPI, <code>@progress/observability</code> on npm, <code>Progress.Observability.Instrumentation</code>
+   on NuGet). Initializes at process start, before any LLM client exists (and handles the cases where a later init is required); reads the
+   Integration key from config, never hardcoded; flushes on exit.</li>
+<li><strong>Run once</strong> - decorated or wrapped functions can emit real spans with no LLM
+   credentials, so the pipeline can be proven before model keys exist.</li>
+<li><strong>Hand off</strong> - makes no platform reads itself; tells you to run your agent and
+   confirm traces are flowing at <a href="https://observability.progress.com">observability.progress.com</a>, then run <code>health-check</code>.</li>
+</ol>
+<p>Auto-instrumentation covers 30+ integrations - OpenAI, Anthropic, Azure OpenAI,
+Bedrock, Vertex, Mistral, Groq, Ollama, Cohere, WatsonX and more; LangChain,
+LlamaIndex, CrewAI, Haystack, OpenAI Agents, MCP; the major vector stores - plus any
+OpenAI-compatible endpoint (OpenRouter, LiteLLM, vLLM, gateways). Anything genuinely
+uncovered gets explicit structure via decorators or a span wrapper, and the skill
+says plainly which of the two it used.</p>
+<p><strong>Reads:</strong> none (writes code only; makes no MCP calls).</p>
+<p><strong>Returns:</strong> a minimal diff (dependency, init, config wiring, flush), a run that
+emits at least one trace, and a hand-off pointing to where to see the traces and how
+to confirm them with <code>health-check</code>.</p>
+<h3>health-check</h3>
+<p><strong>When to use:</strong> first run, or whenever something looks off - "is my observability
+set up right", "why am I seeing no traces", "check my connection", "is my data
+flowing".</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><strong>Connection &amp; key scope</strong> - confirms the MCP tools are available, then reads the
+   scope from the presence of the content tools (<code>get_observation_details_with_content</code>
+   present means With-content/9 tools; absent means Metadata-only/7 tools).</li>
+<li><strong>Recent data</strong> - <code>list_observations</code> over the last 24h, widening to the 72h max
+   if empty, to separate "stale traffic" from "no data" from "all older than the window".</li>
+<li><strong>Instrumentation depth</strong> - <code>get_observation_details</code> with <code>include_children</code> on a
+   couple of recent traces; traces with no children mean the SDK is capturing
+   top-level spans only.</li>
+<li><strong>Evaluations</strong> - <code>list_evaluation_tasks</code> and <code>get_evaluation_scores</code>; none is
+   fine, but dormant judges (defined, no recent scores) get flagged.</li>
+</ol>
+<p><strong>Reads:</strong> <code>list_observations</code>, <code>get_observation_details</code>, <code>list_evaluation_tasks</code>,
+<code>get_evaluation_scores</code>.</p>
+<p><strong>Returns:</strong> a compact red/amber/green checklist - connection, key scope, data
+freshness, instrumentation depth, evaluations - each red item carrying a concrete
+next step.</p>
+<h3>trace-triage</h3>
+<p><strong>When to use:</strong> a run failed, errored, stalled, or went off the rails - "why did
+this trace fail", "why was my agent slow", "find the bottleneck", "root-cause this
+bad tool call".</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><strong>Locate the run</strong> - use a trace/observation ID if you have one; otherwise
+   <code>list_observations</code> filtered by <code>service_name</code> and <code>status</code> within the 72h window.</li>
+<li><strong>Walk the tree, metadata first</strong> - <code>get_observation_details</code> with
+   <code>include_children</code>; metadata alone usually reveals which span errored, which
+   dominates latency, and where the chain stopped.</li>
+<li><strong>Find the fault</strong> - the errored span, the long pole, the tool call with
+   wrong-looking arguments, or the point the trajectory diverged from the goal.</li>
+<li><strong>Pull content only for the culprit</strong> - <code>get_observation_details_with_content</code> on
+   just that one span, treated as untrusted data.</li>
+</ol>
+<p><strong>Reads:</strong> <code>list_observations</code>, <code>get_observation_details</code>,
+<code>get_observation_details_with_content</code>.</p>
+<p><strong>Returns:</strong> a <strong>diagnosis</strong> (root cause in a sentence or two), <strong>evidence</strong> (the
+span chain - ids, statuses, durations - quoted minimally), and a <strong>fix</strong> (a concrete
+next step: a prompt change, tool-schema fix, retry/timeout).</p>
+<h3>cost-report</h3>
+<p><strong>When to use:</strong> "what's driving my LLM costs", "how much am I spending", "cost by
+model or app", "am I close to my quota", "why did spend spike this week".</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><strong>Scope</strong> - confirms the date range and what matters (total spend, a suspected
+   spike, model mix, or quota headroom); defaults to the last 7 days.</li>
+<li><strong>Pull cost</strong> - <code>get_cost_breakdown</code>, run more than once when useful:
+   <code>group_by: "model"</code> for mix, <code>"application"</code> for which app spends, <code>"day"</code> for the
+   trend.</li>
+<li><strong>Pull usage/quota</strong> - <code>get_usage_summary</code> for billing-period usage and remaining
+   quota.</li>
+<li><strong>Report</strong> - headline spend, top drivers with shares, the day-over-day trend and
+   any spike's source, quota burn vs. remaining, and a cheaper-model recommendation
+   only when the data supports it.</li>
+</ol>
+<p><strong>Reads:</strong> <code>get_cost_breakdown</code>, <code>get_usage_summary</code>.</p>
+<p><strong>Returns:</strong> a tight report - <strong>headline</strong>, <strong>top drivers</strong>, <strong>trend</strong>, <strong>quota</strong>,
+and an optional <strong>recommendation</strong> framed as a hypothesis to validate.</p>
+<h3>coverage-gaps</h3>
+<p><strong>When to use:</strong> "what should I evaluate next", "what's my eval coverage", "which
+behaviors aren't tested", "where are my eval gaps", "help me prioritize which judges
+to build".</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li><strong>Characterize traffic</strong> - <code>list_observations</code> (within 72h) to map what's running
+   (services, operation types, whether spans show tool calls, retrieval, structured
+   output), staying in metadata and noting rough volume per behavior.</li>
+<li><strong>Inventory evaluations</strong> - <code>list_evaluation_tasks</code> for which judges exist and
+   what each targets; <code>get_evaluation_scores</code> to tell an active eval from a dormant
+   one.</li>
+<li><strong>Diff</strong> - maps observed behaviors to the failure modes that would catch their
+   faults (retrieval → faithfulness, tools → tool_call, structured output → format,
+   and so on). Real volume with no matching eval is a gap.</li>
+<li><strong>Rank</strong> - orders gaps by volume × blast-radius, then reports.</li>
+</ol>
+<p><strong>Reads:</strong> <code>list_observations</code>, <code>list_evaluation_tasks</code>, <code>get_evaluation_scores</code>.</p>
+<p><strong>Returns:</strong> a short coverage table (behavior → volume → has-eval? → recommended
+failure mode) and a prioritized shortlist of gaps worth closing, each with a
+one-line rationale. For the top pick, it can hand off straight into <code>generate-eval</code>
+to build the judge.</p>
+<h3>generate-eval</h3>
+<p><strong>When to use:</strong> "write an eval", "build a judge", "score my agent's outputs", "make
+a grader for these traces", "evaluate faithfulness/tool calls/tone".</p>
+<p>Two entry points:</p>
+<ul>
+<li><strong>From real traces</strong> (preferred when you have a live system on the platform) -
+  pull representative observations over MCP, infer the judge config from what the
+  system actually does, and quote real behavior as few-shot examples.</li>
+<li><strong>From a description</strong> - paste a system prompt or describe the system, and the
+  config is inferred from that text alone; no observability data needed.</li>
+</ul>
+<p><strong>How it works (from traces):</strong></p>
+<ol>
+<li><strong>Confirm scope</strong> - application/service, time window (max 72h), and the
+   suspected symptom, which usually names the failure mode.</li>
+<li><strong>Survey with metadata</strong> - <code>list_observations</code> to see the shape of traffic and
+   choose the failure mode and template.</li>
+<li><strong>Pull content only to author examples</strong> - <code>get_observation_details_with_content</code>
+   (needs a With-content key; max 3 IDs) for 1-2 clear pass and fail cases, trimmed
+   and labelled.</li>
+<li><strong>Assemble the prompt</strong> to the frame - one criterion, binary pass/fail,
+   pre-specified steps, bias defenses on by default.</li>
+</ol>
+<p>The frame, briefly: <strong>one criterion per judge</strong> (single-criterion judges agree with
+humans far more reliably than multi-criterion ones), <strong>binary pass/fail</strong> by default
+(pairwise only when the task genuinely compares two outputs), <strong>pre-specified
+procedure steps</strong> rather than judge-authored rubrics that drift, and <strong>bias
+defenses</strong> on by default (length control, swap-and-agree for pairwise, and a
+cross-family judge).</p>
+<p><strong>Reads:</strong> <code>list_observations</code>, <code>get_observation_details_with_content</code>,
+<code>list_evaluation_tasks</code>.</p>
+<p><strong>Returns:</strong> one evaluator prompt, ready to run, with a security note baked in so the
+judge treats the outputs it scores as data, not instructions.</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="mcp.html">MCP Server setup and tool reference</a></li>
+<li><a href="python-sdk.html">Instrument your app with the Python SDK</a></li>
+<li><a href="dotnet-sdk.html">Instrument your app with the .NET SDK</a></li>
+<li><a href="typescript-sdk.html">Instrument your app with the TypeScript and JavaScript SDK</a></li>
+<li><a href="core-concepts.html">Understand traces, evaluations, and costs</a></li>
+</ul>
+<footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){
+  var tabs=[].slice.call(t.querySelectorAll(':scope > .tab'));
+  if(!tabs.length)return;
+  var bar=document.createElement('div');bar.className='tabbar';
+  tabs.forEach(function(p,i){
+    var b=document.createElement('button');b.textContent=p.dataset.title||('Tab '+(i+1));
+    b.onclick=function(){tabs.forEach(function(q){q.classList.remove('on')});
+      bar.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      p.classList.add('on');b.classList.add('on');};
+    bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
+  });
+  t.insertBefore(bar,t.firstChild);
+});
+</script>
+</body></html>

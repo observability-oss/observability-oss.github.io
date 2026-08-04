@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>.NET SDK · Progress Observability Platform (preview)</title>
+<style>
+:root{--brand:#0d6efd;--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;
+--line:#242a31;--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}}
+:root[data-theme=dark]{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;--line:#242a31;
+--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}
+:root[data-theme=light]{--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);color:var(--fg)}
+.banner{background:var(--brand);color:#fff;text-align:center;padding:.45rem 1rem;font-size:.85rem}
+.banner a{color:#fff}
+.layout{display:flex;max-width:1200px;margin:0 auto}
+nav.side{width:250px;flex-shrink:0;padding:1.5rem 1rem;border-right:1px solid var(--line);
+background:var(--side-bg);min-height:calc(100vh - 40px)}
+nav.side .grp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin:1.2rem 0 .35rem;font-weight:600}
+nav.side a{display:block;padding:.28rem .6rem;border-radius:6px;color:var(--fg);
+text-decoration:none;font-size:.9rem}
+nav.side a:hover{background:var(--hover)}
+nav.side a.on{background:var(--brand);color:#fff}
+main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+main h1{font-size:2rem;margin:.2rem 0 1rem}
+main h2{font-size:1.35rem;margin-top:2.2rem;padding-top:.6rem;border-top:1px solid var(--line)}
+main h3{font-size:1.08rem;margin-top:1.6rem}
+main a{color:var(--brand)}
+code{background:var(--code-bg);padding:.12em .35em;border-radius:4px;font-size:.86em;
+font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+padding:1rem;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:.83rem}
+blockquote{margin:1rem 0;padding:.7rem 1rem;background:var(--note-bg);
+border-left:3px solid var(--note-line);border-radius:0 8px 8px 0}
+blockquote p{margin:.2rem 0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.tabs{margin:1rem 0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabbar{display:flex;background:var(--code-bg);border-bottom:1px solid var(--line)}
+.tabbar button{border:0;background:none;padding:.55rem 1.1rem;cursor:pointer;
+color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
+.tabbar button.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab{display:none;padding:.2rem 1.2rem 1rem}
+.tab.on{display:block}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+color:var(--muted);font-size:.82rem}
+@media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
+border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head><body>
+<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="layout">
+<nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html" class="on">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
+<main>
+<h1>.NET SDK</h1>
+<p>Package: <strong>Progress.Observability.Instrumentation</strong></p>
+<h2>Overview</h2>
+<p>The .NET SDK instruments AI agents built with <code>IChatClient</code> from Microsoft.Extensions.AI or <code>IAgent</code> from the Microsoft Agent Framework. It integrates directly with the .NET Activity/OpenTelemetry pipeline.</p>
+<p>Use this SDK when your agent is built in C# and uses:</p>
+<ul>
+<li><code>IChatClient</code> from Microsoft.Extensions.AI (OpenAI, Azure OpenAI, and others)</li>
+<li><code>IAgent</code> from the Microsoft Agent Framework</li>
+<li>MCP tools via <code>McpClientTool</code></li>
+</ul>
+<p>Core capabilities:</p>
+<ul>
+<li>Automatic tracing of LLM chat completions and streaming responses</li>
+<li>Tool call instrumentation via <code>AddToolObservability()</code></li>
+<li>Custom spans with <code>ObservabilityActivitySource</code></li>
+<li>Tag support for filtering in the platform</li>
+<li>Environment variable overrides for deployment flexibility</li>
+</ul>
+<p>Unlike the Python SDK, the .NET SDK does not auto-instrument third-party libraries. Instead, you explicitly wrap your <code>IChatClient</code> or <code>IAgent</code> with observability.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash">dotnet add &lt;YourProject.csproj&gt; package Progress.Observability.Instrumentation
+</code></pre>
+<blockquote>
+<p>The package requires <code>OpenTelemetry &gt;= 1.15.3</code>. A project pinned to an older
+OpenTelemetry fails to restore with <code>NU1605: Detected package downgrade</code> —
+raise the project's <code>OpenTelemetry</code> reference first.</p>
+</blockquote>
+<p>From a local NuGet source:</p>
+<pre><code class="language-bash"># Copy the .nupkg file to your local source folder (for example, c:\packages)
+dotnet nuget add source c:\packages --name LocalFeed
+
+# Verify the source exists
+dotnet nuget list source
+
+# Add the package from the local source
+dotnet add package Progress.Observability.Instrumentation --source LocalFeed
+</code></pre>
+<h2>Initialization</h2>
+<p>The initialization approach depends on whether you use <code>IChatClient</code> or <code>IAgent</code>.</p>
+<h3>IChatClient</h3>
+<p>Call <code>AddObservability()</code> on your chat client:</p>
+<pre><code class="language-cs">using Microsoft.Extensions.AI;
+using Progress.Observability.Extensions.AI;
+
+IChatClient chatClient = new OpenAI.Chat.ChatClient(&quot;gpt-4.1-mini&quot;, openAIApiKey)
+    .AsIChatClient();
+
+// Add Progress Observability for LLM calls
+chatClient = chatClient.AddObservability(options =&gt; {
+    options.AppName = &quot;My Agent&quot;;
+    options.ApiKey = &quot;ac_p_001_.....&quot;;
+});
+</code></pre>
+<h3>IAgent</h3>
+<p>Call <code>ObservabilityTracer.Initialize()</code> and then <code>UseOpenTelemetry()</code>:</p>
+<pre><code class="language-cs">using Progress.Observability.Extensions.AI;
+
+var agentName = &quot;Awesome AI Agent&quot;;
+
+// Initialize the observability tracer
+ObservabilityTracer.Initialize(new ObservabilityOptions()
+{
+    AppName = agentName,
+    ApiKey = &quot;ac_p_001_.....&quot;,
+    AdditionalAttributes = new Dictionary&lt;string, object&gt;()
+    {
+        { &quot;customer.id&quot;, Guid.NewGuid().ToString() },
+        { &quot;customer.quota&quot;, 2026 }
+    },
+    AdditionalTags = new List&lt;string&gt;()
+    {
+        &quot;customer.id:12345&quot;,
+        &quot;NewCustomer&quot;
+    }
+});
+
+// Create tools (optionally add tool observability)
+List&lt;AITool&gt; tools = [AIFunctionFactory.Create(MyToolFunction)];
+
+// Build the agent with OpenTelemetry
+var aiAgent = new AzureOpenAIClient(new(endpoint), new AzureKeyCredential(key))
+    .GetChatClient(&quot;gpt-4.1&quot;)
+    .AsAIAgent(
+        instructions: &quot;You are a helpful assistant.&quot;,
+        name: agentName,
+        tools: tools)
+    .AsBuilder()
+    .UseOpenTelemetry(
+        sourceName: ObservabilityTracer.SourceName,
+        configure: agent =&gt; {
+            agent.EnableSensitiveData = true;
+        })
+    .Build();
+</code></pre>
+<h2>Configuration</h2>
+<h3>Options</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AppName</td>
+<td>string</td>
+<td>Agent</td>
+<td>Application name shown in the platform</td>
+</tr>
+<tr>
+<td>ApiKey</td>
+<td>string</td>
+<td>empty</td>
+<td>Your API key (required)</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td>string</td>
+<td>https://collector.observability.progress.com:443</td>
+<td>Collector endpoint URL</td>
+</tr>
+<tr>
+<td>RecordInputs</td>
+<td>bool</td>
+<td>true</td>
+<td>Include request messages in spans</td>
+</tr>
+<tr>
+<td>RecordOutputs</td>
+<td>bool</td>
+<td>true</td>
+<td>Include response content in spans</td>
+</tr>
+<tr>
+<td>Debug</td>
+<td>bool</td>
+<td>false</td>
+<td>Enable debug logging</td>
+</tr>
+<tr>
+<td>AdditionalAttributes</td>
+<td>Dictionary<string, object></td>
+<td>empty</td>
+<td>Custom attributes on all spans</td>
+</tr>
+<tr>
+<td>AdditionalTags</td>
+<td>List<string></td>
+<td>empty</td>
+<td>Tags for filtering (max 200 chars)</td>
+</tr>
+</tbody>
+</table>
+<h3>Environment Variables</h3>
+<p>PowerShell:</p>
+<pre><code class="language-bash"># PowerShell
+$env:PROGRESS__OBSERVABILITY__APPNAME=&quot;Weather Agent&quot;
+$env:PROGRESS__OBSERVABILITY__APIKEY=&quot;ac_p_001_.....&quot;
+$env:PROGRESS__OBSERVABILITY__ENDPOINT=&quot;https://collector.observability.progress.com:443&quot;
+</code></pre>
+<p>Bash:</p>
+<pre><code class="language-bash"># Bash / macOS / Linux
+export PROGRESS__OBSERVABILITY__APPNAME=&quot;Weather Agent&quot;
+export PROGRESS__OBSERVABILITY__APIKEY=&quot;ac_p_001_.....&quot;
+export PROGRESS__OBSERVABILITY__ENDPOINT=&quot;https://collector.observability.progress.com:443&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Used when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROGRESS__OBSERVABILITY__APPNAME</td>
+<td><code>AppName</code> is not set in code</td>
+</tr>
+<tr>
+<td>PROGRESS__OBSERVABILITY__APIKEY</td>
+<td><code>ApiKey</code> is not set in code</td>
+</tr>
+<tr>
+<td>PROGRESS__OBSERVABILITY__ENDPOINT</td>
+<td><code>Endpoint</code> is not set in code</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Explicit <code>ObservabilityOptions</code> properties take precedence; the environment
+variables are a fallback for values not set in code. (This differs from the
+Python SDK, where environment variables override code.)</p>
+<p>The double-underscore (__) separator follows the standard .NET configuration binding convention. Do not use single underscores.</p>
+</blockquote>
+<h2>IChatClient Usage</h2>
+<p>Full setup with tools and all configuration options:</p>
+<pre><code class="language-cs">using Microsoft.Extensions.AI;
+using Progress.Observability.Extensions.AI;
+
+IChatClient chatClient = new OpenAI.Chat.ChatClient(&quot;gpt-4.1-mini&quot;, openAIApiKey)
+    .AsIChatClient();
+
+chatClient = chatClient.AddObservability(options =&gt; {
+    options.AppName = &quot;Weather Agent&quot;;
+    options.ApiKey = &quot;ac_p_001_.....&quot;;
+    options.Endpoint = &quot;https://collector.observability.progress.com:443&quot;;
+    options.RecordInputs = true;    // include request messages (default: true)
+    options.RecordOutputs = true;   // include response content (default: true)
+    options.Debug = false;          // enable debug logging (default: false)
+    options.AdditionalAttributes = new Dictionary&lt;string, object&gt;
+    {
+        { &quot;project.id&quot;, 2182374 },
+        { &quot;environment&quot;, &quot;dev&quot; }
+    };
+    options.AdditionalTags = new List&lt;string&gt;
+    {
+        &quot;customer.id:12345&quot;,
+        &quot;NewCustomer&quot;
+    };
+});
+
+// Enable function invocation wrapping
+chatClient = new ChatClientBuilder(chatClient)
+    .UseFunctionInvocation()
+    .Build();
+</code></pre>
+<h2>Tool Observability</h2>
+<p>Tool spans are captured automatically when <code>UseFunctionInvocation()</code> (or an
+agent built with <code>AsAIAgent(tools: ...)</code>) drives the calls and
+<code>.AddObservability()</code> wraps the chat client. <code>AddToolObservability()</code> exists
+for apps that dispatch tools <strong>themselves</strong>, outside that middleware:</p>
+<pre><code class="language-cs">// Set up tools and enable tool observability
+IList&lt;McpClientTool&gt; tools = await mcpClient.ListToolsAsync();
+ChatOptions options = new() { Tools = [..tools] };
+
+// Add Progress Observability for tool calls
+options.AddToolObservability();
+
+var response = await chatClient.GetResponseAsync(
+    &quot;What is the weather in Paris?&quot;, options
+);
+</code></pre>
+<p>This wraps each <code>AIFunction</code> tool so every invocation creates a span with the tool name, input arguments, and output result. It is idempotent — already-instrumented tools are left alone — so it is safe on a list you do not fully control, but with function-invocation middleware in the chain it is redundant.</p>
+<h2>IAgent Usage</h2>
+<pre><code class="language-cs">using Progress.Observability.Extensions.AI;
+
+var agentName = &quot;Awesome AI Agent&quot;;
+
+// Initialize the observability tracer
+ObservabilityTracer.Initialize(new ObservabilityOptions()
+{
+    AppName = agentName,
+    ApiKey = &quot;ac_p_001_.....&quot;,
+    AdditionalAttributes = new Dictionary&lt;string, object&gt;()
+    {
+        { &quot;customer.id&quot;, Guid.NewGuid().ToString() },
+        { &quot;customer.quota&quot;, 2026 }
+    },
+    AdditionalTags = new List&lt;string&gt;()
+    {
+        &quot;customer.id:12345&quot;,
+        &quot;NewCustomer&quot;
+    }
+});
+
+// Create tools (optionally add tool observability)
+List&lt;AITool&gt; tools = [AIFunctionFactory.Create(MyToolFunction)];
+
+// Build the agent with OpenTelemetry
+var aiAgent = new AzureOpenAIClient(new(endpoint), new AzureKeyCredential(key))
+    .GetChatClient(&quot;gpt-4.1&quot;)
+    .AsAIAgent(
+        instructions: &quot;You are a helpful assistant.&quot;,
+        name: agentName,
+        tools: tools)
+    .AsBuilder()
+    .UseOpenTelemetry(
+        sourceName: ObservabilityTracer.SourceName,
+        configure: agent =&gt; {
+            agent.EnableSensitiveData = true;
+        })
+    .Build();
+</code></pre>
+<h2>Custom Spans</h2>
+<p>Use <code>ObservabilityActivitySource</code> to create your own spans for operations that are not automatically instrumented:</p>
+<pre><code class="language-cs">using Progress.Observability.Extensions.AI;
+
+// Create custom activities for fine-grained observability
+using (var activity = ObservabilityActivitySource.Instance.StartActivity(&quot;weather agent call&quot;))
+{
+    // Add custom attributes visible in the dashboard
+    activity?.SetTag(&quot;date&quot;, DateTime.Now.ToString(&quot;yyyy-MM-dd&quot;));
+    activity?.SetTag(&quot;region&quot;, &quot;europe&quot;);
+
+    var response = await chatClient.GetResponseAsync(
+        &quot;What is the weather in Paris?&quot;, options
+    );
+}
+</code></pre>
+<p>Custom spans appear in the trace tree alongside auto-instrumented LLM and tool spans.</p>
+<h2>Tags</h2>
+<p>Tags are set during initialization and apply to all spans:</p>
+<pre><code class="language-cs">// Tags set during initialization apply to all spans
+ObservabilityTracer.Initialize(new ObservabilityOptions()
+{
+    AppName = &quot;My Agent&quot;,
+    ApiKey = &quot;ac_p_001_.....&quot;,
+    AdditionalTags = new List&lt;string&gt;()
+    {
+        &quot;environment:production&quot;,
+        &quot;team:platform&quot;
+    }
+});
+</code></pre>
+<p>Tags are sanitized automatically: the SDK removes empty strings and trims each tag to a maximum of 200 characters.</p>
+<p>The .NET SDK does not currently support scoped tag propagation like Python's <code>propagate_attributes</code>. Tags must be set globally at initialization time.</p>
+<h2>Shutdown</h2>
+<p>Always call <code>Shutdown()</code> before your process exits to flush pending telemetry:</p>
+<pre><code class="language-cs">// Always call Shutdown() before exiting to flush pending telemetry
+try
+{
+    // Run your agent
+    await RunAgent();
+}
+finally
+{
+    ObservabilityTracer.Shutdown();
+}
+</code></pre>
+<p>For <code>IChatClient</code> usage, the SDK manages the tracer lifecycle internally, but call <code>Shutdown()</code> explicitly to ensure all spans are sent.</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="core-concepts.html">Understand traces, spans, and evaluations</a></li>
+<li><a href="troubleshooting.html">Resolve .NET telemetry issues</a></li>
+<li><a href="mcp.html">Connect AI clients with the MCP server</a></li>
+<li><a href="getting-started.html">Get started with platform setup</a></li>
+</ul>
+<h2>Hosted Apps (ASP.NET, Generic Host, Workers)</h2>
+<p>In a dependency-injection app all three touch points move:</p>
+<pre><code class="language-cs">ObservabilityTracer.Initialize(new ObservabilityOptions
+{
+    AppName = appName,
+    ApiKey = Environment.GetEnvironmentVariable(&quot;OBSERVABILITY_API_KEY&quot;)!
+});
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services
+    .AddChatClient(sp =&gt; sp.GetRequiredService&lt;OpenAIClient&gt;()
+        .GetChatClient(model).AsIChatClient()
+        .AddObservability())      // inside the factory, on the IChatClient
+    .UseFunctionInvocation();
+
+var host = builder.Build();
+host.Services.GetRequiredService&lt;IHostApplicationLifetime&gt;()
+    .ApplicationStopping.Register(ObservabilityTracer.Shutdown);
+</code></pre>
+<ul>
+<li><code>Initialize()</code> runs before <code>Build()</code>, so the tracer is live before DI
+  resolves any registered client.</li>
+<li><code>.AddObservability()</code> goes <strong>inside</strong> the <code>AddChatClient</code> factory. It is an
+  extension on <code>IChatClient</code>, not on <code>ChatClientBuilder</code>, so chaining it after
+  <code>.UseFunctionInvocation()</code> is a compile error (CS1929). Inside the factory
+  it captures LLM calls and the tool calls the middleware makes.</li>
+<li><code>Shutdown()</code> registers on <code>ApplicationStopping</code> — a hosted app has no
+  console <code>try</code>/<code>finally</code> to flush from.</li>
+</ul>
+<h2>Using Progress Alongside Existing OpenTelemetry</h2>
+<p>Initialization order does not matter in .NET: <code>Initialize()</code> builds its own
+<code>TracerProvider</code>, and one the app built with <code>Sdk.CreateTracerProviderBuilder()</code>
+keeps working either way. Two things to know:</p>
+<ul>
+<li><strong>Do not add <code>.AddObservability()</code> to a chat client that already has
+  <code>.UseOpenTelemetry()</code></strong> — both layers record every call, doubling token and
+  cost figures. Keep one, or expect doubled numbers.</li>
+<li><strong>Progress spans appear in their own trace</strong> rather than nesting under the
+  app's activities. This is by design. If you want Progress spans in your own
+  backend too, subscribe your provider to the
+  <code>Progress.Observability.AgentMonitoring</code> source.</li>
+</ul>
+<footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){
+  var tabs=[].slice.call(t.querySelectorAll(':scope > .tab'));
+  if(!tabs.length)return;
+  var bar=document.createElement('div');bar.className='tabbar';
+  tabs.forEach(function(p,i){
+    var b=document.createElement('button');b.textContent=p.dataset.title||('Tab '+(i+1));
+    b.onclick=function(){tabs.forEach(function(q){q.classList.remove('on')});
+      bar.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      p.classList.add('on');b.classList.add('on');};
+    bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
+  });
+  t.insertBefore(bar,t.firstChild);
+});
+</script>
+</body></html>
