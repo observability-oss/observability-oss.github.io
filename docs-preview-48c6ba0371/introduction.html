@@ -52,11 +52,27 @@ color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
 .tab.on{display:block}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
 color:var(--muted);font-size:.82rem}
+.chg{position:relative;border-left:3px solid #e5484d;padding-left:.9rem;
+margin:1rem 0;border-radius:2px}
+.chg-del,.chg-mark{padding:.1rem .9rem}
+.chg-chip{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.04em;
+text-transform:uppercase;color:#e5484d;cursor:pointer;user-select:none;
+border:1px solid #e5484d55;border-radius:999px;padding:.05rem .55rem;margin:.15rem 0}
+.chg-chip:hover{background:#e5484d18}
+.chg-panel{display:none;position:absolute;z-index:30;left:0;right:-1px;top:100%;
+max-height:340px;overflow:auto;background:var(--bg);border:1px solid #e5484d;
+border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:.6rem .9rem;margin-top:.25rem}
+.chg-del .chg-panel,.chg-mark .chg-panel{top:auto}
+.chg.open .chg-panel,.chg-chip:hover+.chg-panel{display:block}
+.chg-panel .lbl{color:#e5484d;font-weight:700;font-size:.75rem;margin-bottom:.3rem}
+.chg-panel pre{margin:0;border:0;background:var(--code-bg);font-size:.78rem;
+white-space:pre-wrap;word-break:break-word}
 @media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
 border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head><body>
-<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="banner">Documentation preview — restructured draft, not the official docs.
+Edited sections carry a red bar: hover or click the chip to see the original text.</div>
 <div class="layout">
 <nav class="side"><div class="grp">Platform</div><a href="introduction.html" class="on">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
 <main>
@@ -64,6 +80,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 <p>Progress® Observability Platform gives you full visibility into your AI agents and LLM-powered applications. It captures traces, measures costs, and evaluates output quality — so you can release AI features with confidence.</p>
 <h2>Key Features</h2>
 <p>With Progress Observability you can:</p>
+<div class="chg" data-old="- Instrument your code in minutes using SDKs for Python and .NET">
 <ul>
 <li>Monitor every LLM call, tool invocation, and agent workflow in real time</li>
 <li>Track token usage and costs broken down by model, provider, and time period</li>
@@ -71,6 +88,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 <li>Tag and filter observations to isolate specific customers, experiments, or environments</li>
 <li>Instrument your code in minutes using SDKs for Python, TypeScript/JavaScript, and .NET</li>
 </ul>
+</div>
 <h2>How It Works</h2>
 <p>The platform has three layers:</p>
 <ul>
@@ -105,6 +123,20 @@ document.querySelectorAll('.tabs').forEach(function(t){
     bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
   });
   t.insertBefore(bar,t.firstChild);
+});
+document.querySelectorAll('.chg').forEach(function(c){
+  var old=c.dataset.old||'';
+  var chip=document.createElement('span');chip.className='chg-chip';
+  chip.textContent=c.classList.contains('chg-del')?'removed here':
+    (old?'changed':'new section');
+  var panel=document.createElement('div');panel.className='chg-panel';
+  var lbl=document.createElement('div');lbl.className='lbl';
+  lbl.textContent=old?'Old:':'No previous version — this content is new.';
+  panel.appendChild(lbl);
+  if(old){var pre=document.createElement('pre');pre.textContent=old;panel.appendChild(pre);}
+  chip.onclick=function(e){e.stopPropagation();c.classList.toggle('open');};
+  c.insertBefore(panel,c.firstChild);
+  c.insertBefore(chip,c.firstChild);
 });
 </script>
 </body></html>

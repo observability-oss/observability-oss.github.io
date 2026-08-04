@@ -52,11 +52,27 @@ color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
 .tab.on{display:block}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
 color:var(--muted);font-size:.82rem}
+.chg{position:relative;border-left:3px solid #e5484d;padding-left:.9rem;
+margin:1rem 0;border-radius:2px}
+.chg-del,.chg-mark{padding:.1rem .9rem}
+.chg-chip{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.04em;
+text-transform:uppercase;color:#e5484d;cursor:pointer;user-select:none;
+border:1px solid #e5484d55;border-radius:999px;padding:.05rem .55rem;margin:.15rem 0}
+.chg-chip:hover{background:#e5484d18}
+.chg-panel{display:none;position:absolute;z-index:30;left:0;right:-1px;top:100%;
+max-height:340px;overflow:auto;background:var(--bg);border:1px solid #e5484d;
+border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:.6rem .9rem;margin-top:.25rem}
+.chg-del .chg-panel,.chg-mark .chg-panel{top:auto}
+.chg.open .chg-panel,.chg-chip:hover+.chg-panel{display:block}
+.chg-panel .lbl{color:#e5484d;font-weight:700;font-size:.75rem;margin-bottom:.3rem}
+.chg-panel pre{margin:0;border:0;background:var(--code-bg);font-size:.78rem;
+white-space:pre-wrap;word-break:break-word}
 @media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
 border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head><body>
-<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="banner">Documentation preview — restructured draft, not the official docs.
+Edited sections carry a red bar: hover or click the chip to see the original text.</div>
 <div class="layout">
 <nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html" class="on">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
 <main>
@@ -80,6 +96,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 </ul>
 <p>Unlike the Python SDK, the .NET SDK does not auto-instrument third-party libraries. Instead, you explicitly wrap your <code>IChatClient</code> or <code>IAgent</code> with observability.</p>
 <h2>Installation</h2>
+<div class="chg" data-old="">
 <pre><code class="language-bash">dotnet add &lt;YourProject.csproj&gt; package Progress.Observability.Instrumentation
 </code></pre>
 <blockquote>
@@ -87,6 +104,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 OpenTelemetry fails to restore with <code>NU1605: Detected package downgrade</code> —
 raise the project's <code>OpenTelemetry</code> reference first.</p>
 </blockquote>
+</div>
 <p>From a local NuGet source:</p>
 <pre><code class="language-bash"># Copy the .nupkg file to your local source folder (for example, c:\packages)
 dotnet nuget add source c:\packages --name LocalFeed
@@ -229,6 +247,11 @@ export PROGRESS__OBSERVABILITY__APPNAME=&quot;Weather Agent&quot;
 export PROGRESS__OBSERVABILITY__APIKEY=&quot;ac_p_001_.....&quot;
 export PROGRESS__OBSERVABILITY__ENDPOINT=&quot;https://collector.observability.progress.com:443&quot;
 </code></pre>
+<div class="chg" data-old="| Variable | Overrides |
+⋯
+| PROGRESS__OBSERVABILITY__APPNAME | AppName |
+| PROGRESS__OBSERVABILITY__APIKEY | ApiKey |
+| PROGRESS__OBSERVABILITY__ENDPOINT | Endpoint |">
 <table>
 <thead>
 <tr>
@@ -255,6 +278,9 @@ export PROGRESS__OBSERVABILITY__ENDPOINT=&quot;https://collector.observability.p
 <p>Explicit <code>ObservabilityOptions</code> properties take precedence; the environment
 variables are a fallback for values not set in code. (This differs from the
 Python SDK, where environment variables override code.)</p>
+</blockquote>
+</div>
+<blockquote>
 <p>The double-underscore (__) separator follows the standard .NET configuration binding convention. Do not use single underscores.</p>
 </blockquote>
 <h2>IChatClient Usage</h2>
@@ -290,10 +316,12 @@ chatClient = new ChatClientBuilder(chatClient)
     .Build();
 </code></pre>
 <h2>Tool Observability</h2>
+<div class="chg" data-old="Call `AddToolObservability()` on your `ChatOptions` to instrument tool invocations:">
 <p>Tool spans are captured automatically when <code>UseFunctionInvocation()</code> (or an
 agent built with <code>AsAIAgent(tools: ...)</code>) drives the calls and
 <code>.AddObservability()</code> wraps the chat client. <code>AddToolObservability()</code> exists
 for apps that dispatch tools <strong>themselves</strong>, outside that middleware:</p>
+</div>
 <pre><code class="language-cs">// Set up tools and enable tool observability
 IList&lt;McpClientTool&gt; tools = await mcpClient.ListToolsAsync();
 ChatOptions options = new() { Tools = [..tools] };
@@ -305,7 +333,9 @@ var response = await chatClient.GetResponseAsync(
     &quot;What is the weather in Paris?&quot;, options
 );
 </code></pre>
+<div class="chg" data-old="This wraps each `AIFunction` tool so every invocation creates a span with the tool name, input arguments, and output result.">
 <p>This wraps each <code>AIFunction</code> tool so every invocation creates a span with the tool name, input arguments, and output result. It is idempotent — already-instrumented tools are left alone — so it is safe on a list you do not fully control, but with function-invocation middleware in the chain it is redundant.</p>
+</div>
 <h2>IAgent Usage</h2>
 <pre><code class="language-cs">using Progress.Observability.Extensions.AI;
 
@@ -394,6 +424,7 @@ finally
 </code></pre>
 <p>For <code>IChatClient</code> usage, the SDK manages the tracer lifecycle internally, but call <code>Shutdown()</code> explicitly to ensure all spans are sent.</p>
 <h2>See Also</h2>
+<div class="chg" data-old="">
 <ul>
 <li><a href="core-concepts.html">Understand traces, spans, and evaluations</a></li>
 <li><a href="troubleshooting.html">Resolve .NET telemetry issues</a></li>
@@ -443,6 +474,7 @@ keeps working either way. Two things to know:</p>
   backend too, subscribe your provider to the
   <code>Progress.Observability.AgentMonitoring</code> source.</li>
 </ul>
+</div>
 <footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
 </main>
 </div>
@@ -459,6 +491,20 @@ document.querySelectorAll('.tabs').forEach(function(t){
     bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
   });
   t.insertBefore(bar,t.firstChild);
+});
+document.querySelectorAll('.chg').forEach(function(c){
+  var old=c.dataset.old||'';
+  var chip=document.createElement('span');chip.className='chg-chip';
+  chip.textContent=c.classList.contains('chg-del')?'removed here':
+    (old?'changed':'new section');
+  var panel=document.createElement('div');panel.className='chg-panel';
+  var lbl=document.createElement('div');lbl.className='lbl';
+  lbl.textContent=old?'Old:':'No previous version — this content is new.';
+  panel.appendChild(lbl);
+  if(old){var pre=document.createElement('pre');pre.textContent=old;panel.appendChild(pre);}
+  chip.onclick=function(e){e.stopPropagation();c.classList.toggle('open');};
+  c.insertBefore(panel,c.firstChild);
+  c.insertBefore(chip,c.firstChild);
 });
 </script>
 </body></html>
