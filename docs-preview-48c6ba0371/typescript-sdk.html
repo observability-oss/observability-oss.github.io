@@ -85,15 +85,11 @@ import '@progress/observability/register/hooks';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Observability, ObservabilityInstruments } from '@progress/observability';
+import { Observability } from '@progress/observability';
 
 await Observability.instrument({
     appName: 'my-ai-agent',
-    apiKey: process.env.OBSERVABILITY_API_KEY,
-    // Name your providers explicitly. In the current release, default
-    // initialization enables LangChain only — a direct OpenAI/Cohere app
-    // emits no spans without this line.
-    instruments: new Set([ObservabilityInstruments.OPENAI])
+    apiKey: process.env.OBSERVABILITY_API_KEY
 });
 
 // Load your main app after instrumentation is ready
@@ -120,14 +116,13 @@ await Observability.instrument({
 point. Do <strong>not</strong> import the register/hooks module — it intercepts ESM
 resolution only.</p>
 <pre><code class="language-typescript">// bootstrap.ts — CommonJS
-const { Observability, ObservabilityInstruments } = require('@progress/observability');
+const { Observability } = require('@progress/observability');
 require('dotenv').config();
 
 async function main() {
     await Observability.instrument({
         appName: 'my-ai-agent',
-        apiKey: process.env.OBSERVABILITY_API_KEY,
-        instruments: new Set([ObservabilityInstruments.OPENAI])
+        apiKey: process.env.OBSERVABILITY_API_KEY
     });
 
     require('./src/app');   // load the app only after instrument()
@@ -385,12 +380,6 @@ class MyService {
 }
 </code></pre>
 <h2>Supported Instruments</h2>
-<blockquote>
-<p><strong>Default initialization enables LangChain only.</strong> To trace any provider in
-the table below, pass it in <code>instruments:</code> explicitly (see the initialization
-examples above). This is the single most common cause of "no spans" on this
-SDK.</p>
-</blockquote>
 <h3>Currently Instrumented</h3>
 <table>
 <thead>
@@ -441,13 +430,6 @@ try {
 <li><a href="mcp.html">Connect AI clients with the MCP server</a></li>
 <li><a href="getting-started.html">Get started with platform setup</a></li>
 </ul>
-<h2>Known Limitation: Apps That Register Their Own TracerProvider</h2>
-<p>If your application already registers its own OpenTelemetry <code>TracerProvider</code>
-(via <code>provider.register()</code>), the current release cannot attach its exporter to
-it: spans are enriched but exported only to the app's own backend, and nothing
-reaches the platform — in either initialization order. Until this is resolved,
-run Progress instrumentation in processes that do not register their own
-provider. This limitation does not affect the Python or .NET SDKs.</p>
 <h2>Requirements</h2>
 <ul>
 <li>Node.js 18 or later (examples tested on Node 22)</li>

@@ -231,17 +231,12 @@ await Observability.instrument({
 import 'dotenv/config';
 
 import { CohereClientV2 } from 'cohere-ai';
-import {
-  Observability,
-  ObservabilityInstruments,
-} from '@progress/observability';
+import { Observability } from '@progress/observability';
 
 async function initializeObservability() {
   await Observability.instrument({
     appName: process.env.OBSERVABILITY_APP_NAME ?? 'weather-agent-cohere-sdk',
-    apiKey: process.env.OBSERVABILITY_API_KEY,   // throws loudly if missing
-    // Required: default initialization does not enable Cohere instrumentation.
-    instruments: new Set([ObservabilityInstruments.COHERE]),
+    apiKey: process.env.OBSERVABILITY_API_KEY,
   });
 }
 
