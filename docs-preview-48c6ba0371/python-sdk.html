@@ -52,11 +52,27 @@ color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
 .tab.on{display:block}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
 color:var(--muted);font-size:.82rem}
+.chg{position:relative;border-left:3px solid #e5484d;padding-left:.9rem;
+margin:1rem 0;border-radius:2px}
+.chg-del,.chg-mark{padding:.1rem .9rem}
+.chg-chip{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.04em;
+text-transform:uppercase;color:#e5484d;cursor:pointer;user-select:none;
+border:1px solid #e5484d55;border-radius:999px;padding:.05rem .55rem;margin:.15rem 0}
+.chg-chip:hover{background:#e5484d18}
+.chg-panel{display:none;position:absolute;z-index:30;left:0;right:-1px;top:100%;
+max-height:340px;overflow:auto;background:var(--bg);border:1px solid #e5484d;
+border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:.6rem .9rem;margin-top:.25rem}
+.chg-del .chg-panel,.chg-mark .chg-panel{top:auto}
+.chg.open .chg-panel,.chg-chip:hover+.chg-panel{display:block}
+.chg-panel .lbl{color:#e5484d;font-weight:700;font-size:.75rem;margin-bottom:.3rem}
+.chg-panel pre{margin:0;border:0;background:var(--code-bg);font-size:.78rem;
+white-space:pre-wrap;word-break:break-word}
 @media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
 border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head><body>
-<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="banner">Documentation preview — restructured draft, not the official docs.
+Edited sections carry a red bar: hover or click the chip to see the original text.</div>
 <div class="layout">
 <nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html" class="on">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
 <main>
@@ -78,6 +94,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 <pre><code class="language-bash">pip install progress-observability
 </code></pre>
 <h2>Initialization</h2>
+<div class="chg" data-old="Call `Observability.instrument()` once at the start of your process, before any LLM or framework imports if possible:">
 <p>Call <code>Observability.instrument()</code> once at the start of your process, <strong>before
 importing LLM and framework libraries</strong>. For frameworks that build their
 objects at import time — LangGraph, CrewAI, LlamaIndex, OpenAI Agents, Agno —
@@ -86,6 +103,7 @@ may be missed.</p>
 <p>One exception: if your app already configures OpenTelemetry itself, see
 <a href="#existing-otel">Using Progress alongside existing OpenTelemetry</a> below —
 there, init goes <em>after</em> the app's own setup.</p>
+</div>
 <pre><code class="language-python">from progress.observability import Observability
 
 # Initialize once at process start
@@ -356,8 +374,11 @@ def my_task():
 <p>All three levels merge automatically. If the same tag appears at multiple levels it is deduplicated.</p>
 <h2>Supported Instruments</h2>
 <h3>LLM Providers</h3>
+<div class="chg" data-old="`OPENAI`, `GOOGLE_GENAI` (alias `GOOGLE_GENERATIVEAI`), `ANTHROPIC`, `BEDROCK`, `OLLAMA`, and others.">
 <p><code>OPENAI</code>, <code>GOOGLE_GENERATIVEAI</code>, <code>ANTHROPIC</code>, <code>BEDROCK</code>, <code>OLLAMA</code>, and others.</p>
+</div>
 <h3>Agent Frameworks</h3>
+<div class="chg" data-old="">
 <p><code>LANGCHAIN</code>, <code>LLAMA_INDEX</code>, <code>HAYSTACK</code>, and others.</p>
 <blockquote>
 <p><strong>LangChain and LlamaIndex need the full package installed.</strong> Framework
@@ -367,6 +388,7 @@ instrumentation activates only when the <code>langchain</code> (or <code>langgra
 chain or index structure — silently. Add the full package alongside the
 <code>-core</code> package, never in place of it.</p>
 </blockquote>
+</div>
 <h3>Controlling Instruments</h3>
 <pre><code class="language-python">from progress.observability import Observability, ObservabilityInstruments
 
@@ -391,6 +413,7 @@ finally:
     Observability.shutdown()
 </code></pre>
 <h2>See Also</h2>
+<div class="chg" data-old="">
 <ul>
 <li><a href="core-concepts.html">Understand traces, spans, and evaluations</a></li>
 <li><a href="troubleshooting.html">Resolve Python telemetry issues</a></li>
@@ -425,6 +448,7 @@ under the app's <code>service.name</code> rather than <code>app_name</code>; and
 <ul>
 <li>Python &gt;= 3.10, &lt; 4.0</li>
 </ul>
+</div>
 <footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
 </main>
 </div>
@@ -441,6 +465,20 @@ document.querySelectorAll('.tabs').forEach(function(t){
     bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
   });
   t.insertBefore(bar,t.firstChild);
+});
+document.querySelectorAll('.chg').forEach(function(c){
+  var old=c.dataset.old||'';
+  var chip=document.createElement('span');chip.className='chg-chip';
+  chip.textContent=c.classList.contains('chg-del')?'removed here':
+    (old?'changed':'new section');
+  var panel=document.createElement('div');panel.className='chg-panel';
+  var lbl=document.createElement('div');lbl.className='lbl';
+  lbl.textContent=old?'Old:':'No previous version — this content is new.';
+  panel.appendChild(lbl);
+  if(old){var pre=document.createElement('pre');pre.textContent=old;panel.appendChild(pre);}
+  chip.onclick=function(e){e.stopPropagation();c.classList.toggle('open');};
+  c.insertBefore(panel,c.firstChild);
+  c.insertBefore(chip,c.firstChild);
 });
 </script>
 </body></html>

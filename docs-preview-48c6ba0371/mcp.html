@@ -52,11 +52,27 @@ color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
 .tab.on{display:block}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
 color:var(--muted);font-size:.82rem}
+.chg{position:relative;border-left:3px solid #e5484d;padding-left:.9rem;
+margin:1rem 0;border-radius:2px}
+.chg-del,.chg-mark{padding:.1rem .9rem}
+.chg-chip{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.04em;
+text-transform:uppercase;color:#e5484d;cursor:pointer;user-select:none;
+border:1px solid #e5484d55;border-radius:999px;padding:.05rem .55rem;margin:.15rem 0}
+.chg-chip:hover{background:#e5484d18}
+.chg-panel{display:none;position:absolute;z-index:30;left:0;right:-1px;top:100%;
+max-height:340px;overflow:auto;background:var(--bg);border:1px solid #e5484d;
+border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:.6rem .9rem;margin-top:.25rem}
+.chg-del .chg-panel,.chg-mark .chg-panel{top:auto}
+.chg.open .chg-panel,.chg-chip:hover+.chg-panel{display:block}
+.chg-panel .lbl{color:#e5484d;font-weight:700;font-size:.75rem;margin-bottom:.3rem}
+.chg-panel pre{margin:0;border:0;background:var(--code-bg);font-size:.78rem;
+white-space:pre-wrap;word-break:break-word}
 @media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
 border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head><body>
-<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="banner">Documentation preview — restructured draft, not the official docs.
+Edited sections carry a red bar: hover or click the chip to see the original text.</div>
 <div class="layout">
 <nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html" class="on">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
 <main>
@@ -88,8 +104,10 @@ border-right:0;border-bottom:1px solid var(--line)}}
 <blockquote>
 <p><strong>Warning:</strong> Trace data may contain untrusted LLM-generated content, including prompt-injection attacks and other adversarial instructions. API keys with content access permit AI assistants and applications to retrieve and process raw prompts and completions. By enabling content access and creating this API key, you acknowledge that trace content may contain malicious or misleading instructions and agree that such content must be treated solely as data, not as instructions for the AI system consuming it.</p>
 </blockquote>
+<div class="chg" data-old="## Client Configuration Reference (Codex CLI, GitHub Copilot, Claude CLI, Cursor)">
 <h2>Client Configuration Reference (Codex CLI, GitHub Copilot, Claude Code, Cursor)</h2>
 <p>Use the production endpoint:</p>
+</div>
 <ul>
 <li><code>https://mcp.observability.progress.com/mcp</code></li>
 </ul>
@@ -157,7 +175,9 @@ http_headers = { &quot;User-Agent&quot; = &quot;Codex-CLI/0.144.0&quot; }
 }
 </code></pre>
 <p>Note: Use <code>inputs</code> for secrets, or environment variables via variable interpolation.</p>
+<div class="chg" data-old="### 3. Claude CLI">
 <h3>3. Claude Code</h3>
+</div>
 <p>Configuration files:</p>
 <ul>
 <li>User/local scope: ~/.claude.json</li>
@@ -325,24 +345,26 @@ http_headers = { &quot;User-Agent&quot; = &quot;Codex-CLI/0.144.0&quot; }
 </table>
 <h2>Guardrails and Limits</h2>
 <ul>
-<li>
-<p>list_observations</p>
-<ul>
+<li>list_observations<ul>
 <li>If no time range is provided, queries default to the last 24 hours.</li>
 <li>Each request can cover at most 72 hours of data.</li>
 <li>The default is 20 results. You can set <code>limit</code> from 1 to 100</li>
 <li>Observation filtering supports <code>type</code> values <code>traces</code>, <code>spans</code>, and <code>evaluations</code>.</li>
 </ul>
 </li>
-<li>
-<p>get_observation_details</p>
+</ul>
+<div class="chg" data-old="    - Data access is limited to observations from the last 72 hours.">
 <ul>
+<li>get_observation_details<ul>
 <li>Detail lookup accepts between 1 and 10 <code>observation_ids</code> per request.</li>
 <li>Data access through MCP is limited to observations from the last 72 hours. (This is the MCP access window, not how long the platform retains your data.)</li>
 <li>Responses are metadata-only and omit raw span/resource attributes and prompt/completion content.</li>
 <li>Child expansion depth is supported from 1 to 10 when <code>include_children=true</code>.</li>
 </ul>
 </li>
+</ul>
+</div>
+<ul>
 <li>
 <p>get_observation_details_with_content</p>
 <ul>
@@ -426,12 +448,14 @@ http_headers = { &quot;User-Agent&quot; = &quot;Codex-CLI/0.144.0&quot; }
 <li><strong>Explicit consent:</strong> when you create a <strong>With content</strong> key, you must acknowledge the risk warning before the key can be created.</li>
 </ul>
 <h2>Quick Connectivity Test</h2>
+<div class="chg" data-old="">
 <pre><code class="language-bash">curl -s https://mcp.observability.progress.com/mcp \
     -H &quot;Content-Type: application/json&quot; \
     -H &quot;Accept: application/json, text/event-stream&quot; \
     -H &quot;X-Api-Key: &lt;YOUR_MCP_KEY&gt;&quot; \
     -d '{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;,&quot;params&quot;:{}}'
 </code></pre>
+</div>
 <p>Expected result: tool list matching your key scope.</p>
 <h2>See Also</h2>
 <ul>
@@ -457,6 +481,20 @@ document.querySelectorAll('.tabs').forEach(function(t){
     bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
   });
   t.insertBefore(bar,t.firstChild);
+});
+document.querySelectorAll('.chg').forEach(function(c){
+  var old=c.dataset.old||'';
+  var chip=document.createElement('span');chip.className='chg-chip';
+  chip.textContent=c.classList.contains('chg-del')?'removed here':
+    (old?'changed':'new section');
+  var panel=document.createElement('div');panel.className='chg-panel';
+  var lbl=document.createElement('div');lbl.className='lbl';
+  lbl.textContent=old?'Old:':'No previous version — this content is new.';
+  panel.appendChild(lbl);
+  if(old){var pre=document.createElement('pre');pre.textContent=old;panel.appendChild(pre);}
+  chip.onclick=function(e){e.stopPropagation();c.classList.toggle('open');};
+  c.insertBefore(panel,c.firstChild);
+  c.insertBefore(chip,c.firstChild);
 });
 </script>
 </body></html>

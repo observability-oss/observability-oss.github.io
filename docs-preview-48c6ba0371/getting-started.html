@@ -52,22 +52,41 @@ color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
 .tab.on{display:block}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
 color:var(--muted);font-size:.82rem}
+.chg{position:relative;border-left:3px solid #e5484d;padding-left:.9rem;
+margin:1rem 0;border-radius:2px}
+.chg-del,.chg-mark{padding:.1rem .9rem}
+.chg-chip{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.04em;
+text-transform:uppercase;color:#e5484d;cursor:pointer;user-select:none;
+border:1px solid #e5484d55;border-radius:999px;padding:.05rem .55rem;margin:.15rem 0}
+.chg-chip:hover{background:#e5484d18}
+.chg-panel{display:none;position:absolute;z-index:30;left:0;right:-1px;top:100%;
+max-height:340px;overflow:auto;background:var(--bg);border:1px solid #e5484d;
+border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:.6rem .9rem;margin-top:.25rem}
+.chg-del .chg-panel,.chg-mark .chg-panel{top:auto}
+.chg.open .chg-panel,.chg-chip:hover+.chg-panel{display:block}
+.chg-panel .lbl{color:#e5484d;font-weight:700;font-size:.75rem;margin-bottom:.3rem}
+.chg-panel pre{margin:0;border:0;background:var(--code-bg);font-size:.78rem;
+white-space:pre-wrap;word-break:break-word}
 @media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
 border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head><body>
-<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="banner">Documentation preview — restructured draft, not the official docs.
+Edited sections carry a red bar: hover or click the chip to see the original text.</div>
 <div class="layout">
 <nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html" class="on">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
 <main>
 <h1>Getting Started</h1>
 <p>This tutorial shows how to start using Progress® Observability Platform and capture your first traces.</p>
+<div class="chg" data-old="## Step 1: Create Your Telerik Account">
 <h2>Step 1: Create Your Account</h2>
 <p>Progress Observability Platform uses your Telerik account for sign-in.</p>
+</div>
 <p>Navigate to <a href="https://observability.progress.com/">Progress Observability Platform</a> and follow the instructions to create an account. After you create your account, you land in Progress Observability Platform.</p>
 <blockquote>
 <p>Verify your email by using the link sent during registration. If you do not verify your email, the platform opens in read-only mode.</p>
 </blockquote>
+<div class="chg" data-old="## Step 2: Choose Your Integration">
 <h2>Step 2: Create an Integration Key</h2>
 <p>Your application authenticates to the collector with an <strong>Integration key</strong>
 (it starts with <code>ac_p_</code>).</p>
@@ -84,20 +103,54 @@ AI clients, not to your application. A key of the wrong type fails silently:
 the app starts and runs, but no traces arrive.</p>
 </blockquote>
 <h2>Step 3: Choose Your Integration</h2>
+</div>
 <div class="tabs">
 <div class="tab" data-title="Use agent skills">
 <p>Use the <a href="https://github.com/telerik/observability-skills">observability-skills repository</a> and run the <code>instrument-agent</code> skill in your coding agent.</p>
 <p>Copy and paste this prompt:</p>
 <pre><code class="language-text">Install https://github.com/telerik/observability-skills from GitHub, use instrument-agent to add tracing to this app.
 </code></pre>
+<div class="chg" data-old="&gt; Your coding agent needs an Observability API key. Generate it in the Progress Observability platform and provide it to your agent when prompted.">
 <blockquote>
 <p>The instrumented app needs your <strong>Integration key</strong> at runtime. Set it as <code>OBSERVABILITY_API_KEY</code> in your shell or <code>.env</code> before running — the skill reads it from the environment and will never ask you to paste a key into the chat.</p>
 </blockquote>
 </div>
+</div>
 <div class="tab" data-title="Instrument manually">
 <p>Pick your integration:</p>
+<div class="chg" data-old="&lt;row&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;microsoft-extensions-ai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Microsoft.Extensions.AI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;microsoft-agent-framework-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Microsoft Agent&lt;br/&gt;Framework&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;agno-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Agno&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;aws-strands-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;AWS Strands&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;burr-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Burr&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;crewai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;CrewAI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;haystack-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Haystack by deepset&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;langchain-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;LangChain&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;litellm-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;LiteLLM&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;llamaindex-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;LlamaIndex&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;openai-agents-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;OpenAI Agents&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;aleph-alpha-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Aleph Alpha&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;amazon-bedrock-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Amazon Bedrock&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;amazon-sagemaker-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Amazon SageMaker&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;anthropic-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Anthropic&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;azure-openai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Azure OpenAI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;cohere-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Cohere&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;google-gemini-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Google Gemini&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;google-vertex-ai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Google Vertex AI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;groq-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Groq&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;hugging-face-transformers-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Hugging Face&lt;br/&gt;Transformers&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;ibm-watsonx-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;IBM watsonx&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;mistral-ai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Mistral AI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;ollama-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Ollama&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;openai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;OpenAI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;replicate-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Replicate&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;together-ai-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;Together AI&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+  &lt;column count=&quot;[12,8,6]&quot;&gt;&lt;component href=&quot;writer-integration.html&quot; className=&quot;tile card-icon&quot;&gt;&lt;componenttitle&gt;WRITER&lt;/componenttitle&gt;&lt;/component&gt;&lt;/column&gt;
+&lt;/row&gt;">
 <p><strong>Frameworks:</strong> <a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a> · <a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a> · <a href="crewai-integration.html">CrewAI</a> · <a href="langchain-integration.html">LangChain</a> · Agno · AWS Strands · Burr · Haystack · LiteLLM · LlamaIndex · OpenAI Agents</p>
 <p><strong>LLM providers:</strong> <a href="openai-integration.html">OpenAI</a> · <a href="cohere-integration.html">Cohere</a> · <a href="google-gemini-integration.html">Google Gemini</a> · <a href="google-vertex-ai-integration.html">Google Vertex AI</a> · <a href="groq-integration.html">Groq</a> · Aleph Alpha · Amazon Bedrock · Amazon SageMaker · Anthropic · Azure OpenAI · Hugging Face Transformers · IBM watsonx · Mistral AI · Ollama · Replicate · Together AI · WRITER</p>
+</div>
 </div>
 </div>
 <h2>Next Steps</h2>
@@ -124,6 +177,20 @@ document.querySelectorAll('.tabs').forEach(function(t){
     bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
   });
   t.insertBefore(bar,t.firstChild);
+});
+document.querySelectorAll('.chg').forEach(function(c){
+  var old=c.dataset.old||'';
+  var chip=document.createElement('span');chip.className='chg-chip';
+  chip.textContent=c.classList.contains('chg-del')?'removed here':
+    (old?'changed':'new section');
+  var panel=document.createElement('div');panel.className='chg-panel';
+  var lbl=document.createElement('div');lbl.className='lbl';
+  lbl.textContent=old?'Old:':'No previous version — this content is new.';
+  panel.appendChild(lbl);
+  if(old){var pre=document.createElement('pre');pre.textContent=old;panel.appendChild(pre);}
+  chip.onclick=function(e){e.stopPropagation();c.classList.toggle('open');};
+  c.insertBefore(panel,c.firstChild);
+  c.insertBefore(chip,c.firstChild);
 });
 </script>
 </body></html>
