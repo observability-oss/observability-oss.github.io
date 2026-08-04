@@ -193,12 +193,10 @@ finally:
 <li>Instrument your app</li>
 </ol>
 <pre><code class="language-typescript">import '@progress/observability/register/hooks';
-import { Observability, ObservabilityInstruments } from '@progress/observability';
+import { Observability } from '@progress/observability';
 await Observability.instrument({
   appName: process.env.OBSERVABILITY_APP_NAME ?? 'my-openai-app',
-  apiKey: process.env.OBSERVABILITY_API_KEY,
-  // Required: default initialization does not enable the OpenAI instrumentation.
-  instruments: new Set([ObservabilityInstruments.OPENAI])
+  apiKey: process.env.OBSERVABILITY_API_KEY
 });
 </code></pre>
 <ol>
@@ -208,12 +206,11 @@ await Observability.instrument({
 import '@progress/observability/register/hooks';
 import 'dotenv/config';
 
-import { Observability, ObservabilityInstruments } from '@progress/observability';
+import { Observability } from '@progress/observability';
 
 await Observability.instrument({
   appName: process.env.OBSERVABILITY_APP_NAME ?? 'my-openai-app',
   apiKey: process.env.OBSERVABILITY_API_KEY,
-  instruments: new Set([ObservabilityInstruments.OPENAI]),
 });
 
 try {

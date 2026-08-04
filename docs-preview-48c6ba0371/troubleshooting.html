@@ -110,7 +110,6 @@ border-right:0;border-bottom:1px solid var(--line)}}
 <h2>Python SDK</h2>
 <h3>ImportError or ModuleNotFoundError after installing</h3>
 <ul>
-<li>If the error is <code>ModuleNotFoundError: No module named 'httpx'</code>, run <code>pip install httpx</code>. The underlying SDK imports it without declaring it, so a project with no other source of httpx cannot import <code>progress.observability</code>. Installing with <code>pip install progress-observability httpx</code> avoids this from the start.</li>
 <li>Verify the package is installed in the expected environment using <code>pip show progress-observability</code>.</li>
 <li>The package requires Python &gt;=3.10.0 and &lt;4.0.0.</li>
 </ul>
@@ -183,16 +182,6 @@ app's own OpenTelemetry setup. See the <a href="python-sdk.html">Python SDK</a> 
 If your project pins an older OpenTelemetry, <code>dotnet add package</code> fails with
 <code>NU1605: Detected package downgrade: OpenTelemetry</code>. Raise your project's
 <code>OpenTelemetry</code> reference to <code>1.15.3</code> or later.</p>
-<h3>Provider calls not traced (TypeScript)</h3>
-<p>In the current release, default initialization enables LangChain
-instrumentation only. An app calling a provider SDK directly (OpenAI, Cohere,
-and so on) emits no spans unless you name the provider explicitly:</p>
-<pre><code class="language-typescript">await Observability.instrument({
-    appName: 'my-ai-agent',
-    apiKey: process.env.OBSERVABILITY_API_KEY,
-    instruments: new Set([ObservabilityInstruments.OPENAI]),
-});
-</code></pre>
 <footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
 </main>
 </div>

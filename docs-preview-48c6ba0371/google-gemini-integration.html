@@ -287,16 +287,12 @@ await Observability.instrument({
 import 'dotenv/config';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import {
-  Observability,
-  ObservabilityInstruments,
-} from '@progress/observability';
+import { Observability } from '@progress/observability';
 
 async function initializeObservability() {
   await Observability.instrument({
     appName: process.env.OBSERVABILITY_APP_NAME ?? 'weather-agent-gemini-sdk',
-    apiKey: process.env.OBSERVABILITY_API_KEY,   // throws loudly if missing
-    instruments: new Set([ObservabilityInstruments.GOOGLE_GENERATIVE_AI]),
+    apiKey: process.env.OBSERVABILITY_API_KEY,
   });
 }
 

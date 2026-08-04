@@ -75,15 +75,8 @@ border-right:0;border-bottom:1px solid var(--line)}}
 </ul>
 <h2>Installation</h2>
 <p>From PyPI:</p>
-<pre><code class="language-bash">pip install progress-observability httpx
+<pre><code class="language-bash">pip install progress-observability
 </code></pre>
-<blockquote>
-<p><code>httpx</code> is required: the underlying SDK imports it without declaring it, so
-in a project with no other source of httpx the import of
-<code>progress.observability</code> fails with <code>ModuleNotFoundError: No module named
-'httpx'</code>. Most LLM SDKs pull it in transitively, which is why the omission is
-easy to miss.</p>
-</blockquote>
 <h2>Initialization</h2>
 <p>Call <code>Observability.instrument()</code> once at the start of your process, <strong>before
 importing LLM and framework libraries</strong>. For frameworks that build their
@@ -431,7 +424,6 @@ under the app's <code>service.name</code> rather than <code>app_name</code>; and
 <h2>Requirements</h2>
 <ul>
 <li>Python &gt;= 3.10, &lt; 4.0</li>
-<li><code>httpx</code> installed alongside the package (see Installation)</li>
 </ul>
 <footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
 </main>
