@@ -83,32 +83,7 @@ border-right:0;border-bottom:1px solid var(--line)}}
 AI clients, not to your application. A key of the wrong type fails silently:
 the app starts and runs, but no traces arrive.</p>
 </blockquote>
-<h2>Step 3: Capture Your First Trace</h2>
-<p>You do not need an LLM key to prove the pipeline. This script emits a real
-trace using only your Integration key:</p>
-<pre><code class="language-python"># first_trace.py  --  pip install progress-observability httpx
-import os
-from progress.observability import Observability, workflow
-
-Observability.instrument(
-    app_name=os.environ.get(&quot;OBSERVABILITY_APP_NAME&quot;, &quot;first-trace&quot;),
-    api_key=os.environ[&quot;OBSERVABILITY_API_KEY&quot;],
-)
-
-@workflow(name=&quot;hello-observability&quot;)
-def hello():
-    return &quot;it works&quot;
-
-try:
-    print(hello())
-finally:
-    Observability.shutdown()
-</code></pre>
-<p>Run it, then open <strong>Observations</strong> in the platform. Your trace appears within
-about a minute, under the application name <code>first-trace</code>, containing one
-<code>workflow</code> span named <code>hello-observability</code>. That confirms the key, the
-network path, and the pipeline — before any model credentials exist.</p>
-<h2>Step 4: Choose Your Integration</h2>
+<h2>Step 3: Choose Your Integration</h2>
 <div class="tabs">
 <div class="tab" data-title="Use agent skills">
 <p>Use the <a href="https://github.com/telerik/observability-skills">observability-skills repository</a> and run the <code>instrument-agent</code> skill in your coding agent.</p>
