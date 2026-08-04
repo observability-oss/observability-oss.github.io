@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Google Vertex AI Integration · Progress Observability Platform (preview)</title>
+<style>
+:root{--brand:#0d6efd;--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;
+--line:#242a31;--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}}
+:root[data-theme=dark]{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;--line:#242a31;
+--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}
+:root[data-theme=light]{--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);color:var(--fg)}
+.banner{background:var(--brand);color:#fff;text-align:center;padding:.45rem 1rem;font-size:.85rem}
+.banner a{color:#fff}
+.layout{display:flex;max-width:1200px;margin:0 auto}
+nav.side{width:250px;flex-shrink:0;padding:1.5rem 1rem;border-right:1px solid var(--line);
+background:var(--side-bg);min-height:calc(100vh - 40px)}
+nav.side .grp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin:1.2rem 0 .35rem;font-weight:600}
+nav.side a{display:block;padding:.28rem .6rem;border-radius:6px;color:var(--fg);
+text-decoration:none;font-size:.9rem}
+nav.side a:hover{background:var(--hover)}
+nav.side a.on{background:var(--brand);color:#fff}
+main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+main h1{font-size:2rem;margin:.2rem 0 1rem}
+main h2{font-size:1.35rem;margin-top:2.2rem;padding-top:.6rem;border-top:1px solid var(--line)}
+main h3{font-size:1.08rem;margin-top:1.6rem}
+main a{color:var(--brand)}
+code{background:var(--code-bg);padding:.12em .35em;border-radius:4px;font-size:.86em;
+font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+padding:1rem;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:.83rem}
+blockquote{margin:1rem 0;padding:.7rem 1rem;background:var(--note-bg);
+border-left:3px solid var(--note-line);border-radius:0 8px 8px 0}
+blockquote p{margin:.2rem 0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.tabs{margin:1rem 0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabbar{display:flex;background:var(--code-bg);border-bottom:1px solid var(--line)}
+.tabbar button{border:0;background:none;padding:.55rem 1.1rem;cursor:pointer;
+color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
+.tabbar button.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab{display:none;padding:.2rem 1.2rem 1rem}
+.tab.on{display:block}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+color:var(--muted);font-size:.82rem}
+@media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
+border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head><body>
+<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="layout">
+<nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html" class="on">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
+<main>
+<h1>Google Vertex AI Integration</h1>
+<p>Use this integration when your app is implemented in Python or TypeScript.</p>
+<h2>Setup</h2>
+<div class="tabs">
+<div class="tab" data-title="Python">
+<ol>
+<li>Install SDK</li>
+</ol>
+<pre><code class="language-bash">pip install progress-observability
+</code></pre>
+<ol>
+<li>Instrument your app</li>
+</ol>
+<pre><code class="language-python">Observability.instrument(
+ app_name=os.getenv(&quot;OBSERVABILITY_APP_NAME&quot;),
+ api_key=os.getenv(&quot;OBSERVABILITY_API_KEY&quot;)
+)
+</code></pre>
+</div>
+<div class="tab" data-title="TypeScript">
+<ol>
+<li>Install SDK</li>
+</ol>
+<pre><code class="language-bash">npm install @progress/observability
+</code></pre>
+<ol>
+<li>Instrument your app</li>
+</ol>
+<pre><code class="language-typescript">import '@progress/observability/register/hooks';
+import { Observability } from '@progress/observability';
+await Observability.instrument({
+ appName: process.env.OBSERVABILITY_APP_NAME,
+ apiKey: process.env.OBSERVABILITY_API_KEY
+});
+</code></pre>
+</div>
+</div>
+<blockquote>
+<p><strong>Python requirement:</strong> Vertex AI tracing activates only when
+<code>google-cloud-aiplatform &gt;= 1.38.1</code> is installed — it instruments
+<code>vertexai.generative_models</code> and <code>vertexai.language_models</code>.</p>
+</blockquote>
+<footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){
+  var tabs=[].slice.call(t.querySelectorAll(':scope > .tab'));
+  if(!tabs.length)return;
+  var bar=document.createElement('div');bar.className='tabbar';
+  tabs.forEach(function(p,i){
+    var b=document.createElement('button');b.textContent=p.dataset.title||('Tab '+(i+1));
+    b.onclick=function(){tabs.forEach(function(q){q.classList.remove('on')});
+      bar.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      p.classList.add('on');b.classList.add('on');};
+    bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
+  });
+  t.insertBefore(bar,t.firstChild);
+});
+</script>
+</body></html>

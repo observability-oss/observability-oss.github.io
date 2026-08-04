@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Python SDK · Progress Observability Platform (preview)</title>
+<style>
+:root{--brand:#0d6efd;--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;
+--line:#242a31;--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}}
+:root[data-theme=dark]{--bg:#0f1216;--fg:#e6e8ea;--muted:#9aa4ae;--line:#242a31;
+--code-bg:#171c22;--note-bg:#12233f;--note-line:#4d94ff;--side-bg:#12161b;--hover:#1a2028}
+:root[data-theme=light]{--bg:#ffffff;--fg:#1a1a1a;--muted:#5c6670;--line:#e6e9ec;
+--code-bg:#f6f8fa;--note-bg:#eef4ff;--note-line:#0d6efd;--side-bg:#fafbfc;--hover:#f0f4f8}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);color:var(--fg)}
+.banner{background:var(--brand);color:#fff;text-align:center;padding:.45rem 1rem;font-size:.85rem}
+.banner a{color:#fff}
+.layout{display:flex;max-width:1200px;margin:0 auto}
+nav.side{width:250px;flex-shrink:0;padding:1.5rem 1rem;border-right:1px solid var(--line);
+background:var(--side-bg);min-height:calc(100vh - 40px)}
+nav.side .grp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin:1.2rem 0 .35rem;font-weight:600}
+nav.side a{display:block;padding:.28rem .6rem;border-radius:6px;color:var(--fg);
+text-decoration:none;font-size:.9rem}
+nav.side a:hover{background:var(--hover)}
+nav.side a.on{background:var(--brand);color:#fff}
+main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+main h1{font-size:2rem;margin:.2rem 0 1rem}
+main h2{font-size:1.35rem;margin-top:2.2rem;padding-top:.6rem;border-top:1px solid var(--line)}
+main h3{font-size:1.08rem;margin-top:1.6rem}
+main a{color:var(--brand)}
+code{background:var(--code-bg);padding:.12em .35em;border-radius:4px;font-size:.86em;
+font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+padding:1rem;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0;font-size:.83rem}
+blockquote{margin:1rem 0;padding:.7rem 1rem;background:var(--note-bg);
+border-left:3px solid var(--note-line);border-radius:0 8px 8px 0}
+blockquote p{margin:.2rem 0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.tabs{margin:1rem 0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabbar{display:flex;background:var(--code-bg);border-bottom:1px solid var(--line)}
+.tabbar button{border:0;background:none;padding:.55rem 1.1rem;cursor:pointer;
+color:var(--muted);font-size:.9rem;border-bottom:2px solid transparent}
+.tabbar button.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab{display:none;padding:.2rem 1.2rem 1rem}
+.tab.on{display:block}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+color:var(--muted);font-size:.82rem}
+@media(max-width:820px){.layout{flex-direction:column}nav.side{width:100%;min-height:0;
+border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head><body>
+<div class="banner">Documentation preview — restructured draft, not the official docs.</div>
+<div class="layout">
+<nav class="side"><div class="grp">Platform</div><a href="introduction.html">Introduction</a><a href="getting-started.html">Getting Started</a><a href="core-concepts.html">Core Concepts</a><a href="organizations.html">Organizations</a><div class="grp">SDKs</div><a href="python-sdk.html" class="on">Python SDK</a><a href="typescript-sdk.html">TypeScript & JavaScript SDK</a><a href="dotnet-sdk.html">.NET SDK</a><div class="grp">Integrations</div><a href="openai-integration.html">OpenAI</a><a href="langchain-integration.html">LangChain</a><a href="microsoft-extensions-ai-integration.html">Microsoft.Extensions.AI</a><a href="microsoft-agent-framework-integration.html">Microsoft Agent Framework</a><a href="crewai-integration.html">CrewAI</a><a href="cohere-integration.html">Cohere</a><a href="google-gemini-integration.html">Google Gemini</a><a href="google-vertex-ai-integration.html">Google Vertex AI</a><a href="groq-integration.html">Groq</a><div class="grp">Tooling</div><a href="mcp.html">MCP Server</a><a href="skills.html">Agent Skills</a><a href="troubleshooting.html">Troubleshooting</a></nav>
+<main>
+<h1>Python SDK</h1>
+<p>Package: <strong>progress-observability</strong></p>
+<h2>Overview</h2>
+<p>The Python SDK provides zero-intrusion telemetry for AI agents and LLM applications. It automatically instruments supported LLM providers and agent frameworks — you only need a one-line initialization call.</p>
+<p>Use the Python SDK when your agent is written in Python and uses frameworks like LangChain, LlamaIndex, OpenAI, Anthropic, Google GenAI, or any of the other supported providers.</p>
+<p>Core capabilities:</p>
+<ul>
+<li>Automatic instrumentation of 20+ LLM providers and frameworks</li>
+<li>Manual instrumentation with <code>@task</code>, <code>@workflow</code>, <code>@agent</code>, and <code>@tool</code> decorators</li>
+<li>Tag propagation for filtering and grouping in the platform</li>
+<li>Content tracing control — choose whether prompts and completions are sent</li>
+<li>Environment variable overrides for deployment flexibility</li>
+</ul>
+<h2>Installation</h2>
+<p>From PyPI:</p>
+<pre><code class="language-bash">pip install progress-observability httpx
+</code></pre>
+<blockquote>
+<p><code>httpx</code> is required: the underlying SDK imports it without declaring it, so
+in a project with no other source of httpx the import of
+<code>progress.observability</code> fails with <code>ModuleNotFoundError: No module named
+'httpx'</code>. Most LLM SDKs pull it in transitively, which is why the omission is
+easy to miss.</p>
+</blockquote>
+<h2>Initialization</h2>
+<p>Call <code>Observability.instrument()</code> once at the start of your process, <strong>before
+importing LLM and framework libraries</strong>. For frameworks that build their
+objects at import time — LangGraph, CrewAI, LlamaIndex, OpenAI Agents, Agno —
+this ordering is required, not optional: objects created before <code>instrument()</code>
+may be missed.</p>
+<p>One exception: if your app already configures OpenTelemetry itself, see
+<a href="#existing-otel">Using Progress alongside existing OpenTelemetry</a> below —
+there, init goes <em>after</em> the app's own setup.</p>
+<pre><code class="language-python">from progress.observability import Observability
+
+# Initialize once at process start
+Observability.instrument(
+    app_name=&quot;my-app&quot;,
+    api_key=&quot;&lt;your-api-key&gt;&quot;
+)
+</code></pre>
+<p>All supported libraries are now instrumented automatically.</p>
+<h2>Configuration</h2>
+<p>Full configuration example with all options:</p>
+<pre><code class="language-python">from progress.observability import Observability, ObservabilityInstruments
+
+Observability.instrument(
+    app_name=&quot;my-app&quot;,
+    api_key=&quot;&lt;your-api-key&gt;&quot;,
+    endpoint=&quot;https://collector.observability.progress.com:443&quot;,  # default
+    debug=False,
+    trace_content=True,          # set False to exclude prompts/responses
+    instruments={                 # only enable specific instruments
+        ObservabilityInstruments.OPENAI,
+        ObservabilityInstruments.LANGCHAIN
+    },
+    additional_tags=[&quot;production&quot;, &quot;release:2.4.1&quot;]
+)
+</code></pre>
+<h3>Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app_name</td>
+<td>No</td>
+<td>sys.argv[0]</td>
+<td>Application name shown in the platform</td>
+</tr>
+<tr>
+<td>api_key</td>
+<td>Yes*</td>
+<td>None</td>
+<td>Your API key (* or set env var)</td>
+</tr>
+<tr>
+<td>endpoint</td>
+<td>No</td>
+<td>https://collector.observability.progress.com:443</td>
+<td>Collector endpoint URL</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>No</td>
+<td>False</td>
+<td>Enable debug logging</td>
+</tr>
+<tr>
+<td>trace_content</td>
+<td>No</td>
+<td>True</td>
+<td>Include prompts and completions in traces</td>
+</tr>
+<tr>
+<td>instruments</td>
+<td>No</td>
+<td>None (all enabled)</td>
+<td>Set of instruments to enable</td>
+</tr>
+<tr>
+<td>block_instruments</td>
+<td>No</td>
+<td>None</td>
+<td>Set of instruments to disable</td>
+</tr>
+<tr>
+<td>additional_tags</td>
+<td>No</td>
+<td>None</td>
+<td>Global tags applied to all spans</td>
+</tr>
+<tr>
+<td>disable_batch</td>
+<td>No</td>
+<td>True</td>
+<td>Send traces immediately</td>
+</tr>
+</tbody>
+</table>
+<h3>Environment Variables</h3>
+<p>You can set these instead of (or in addition to) passing parameters to <code>instrument()</code>:</p>
+<pre><code class="language-bash"># Set these environment variables instead of passing them to instrument()
+export OBSERVABILITY_APP_NAME=&quot;my-app&quot;
+export OBSERVABILITY_API_KEY=&quot;&lt;your-api-key&gt;&quot;
+export OBSERVABILITY_ENDPOINT=&quot;https://collector.observability.progress.com:443&quot;
+export OBSERVABILITY_TRACE_CONTENT=&quot;true&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Overrides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBSERVABILITY_APP_NAME</td>
+<td>app_name</td>
+</tr>
+<tr>
+<td>OBSERVABILITY_API_KEY</td>
+<td>api_key</td>
+</tr>
+<tr>
+<td>OBSERVABILITY_ENDPOINT</td>
+<td>endpoint</td>
+</tr>
+<tr>
+<td>OBSERVABILITY_TRACE_CONTENT</td>
+<td>trace_content (true or false)</td>
+</tr>
+</tbody>
+</table>
+<h2>Decorators</h2>
+<p>Decorators add telemetry spans to your own functions. Each decorator creates a span with a specific kind, letting you visualize the structure of your agent in the platform.</p>
+<table>
+<thead>
+<tr>
+<th>Decorator</th>
+<th>Span Kind</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@task</td>
+<td>task</td>
+<td>A discrete unit of work such as a data processing step or API call</td>
+</tr>
+<tr>
+<td>@workflow</td>
+<td>workflow</td>
+<td>A multi-step orchestration that coordinates tasks</td>
+</tr>
+<tr>
+<td>@agent</td>
+<td>agent</td>
+<td>An AI agent entry point</td>
+</tr>
+<tr>
+<td>@tool</td>
+<td>tool</td>
+<td>A tool or function the agent can invoke</td>
+</tr>
+</tbody>
+</table>
+<h3>Decorator Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>str</td>
+<td>function name</td>
+<td>Override span name</td>
+</tr>
+<tr>
+<td>version</td>
+<td>int</td>
+<td>None</td>
+<td>Version number for tracking</td>
+</tr>
+<tr>
+<td>attributes</td>
+<td>dict</td>
+<td>None</td>
+<td>Custom span attributes</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>list[str]</td>
+<td>None</td>
+<td>Tags for this span (max 200 chars each)</td>
+</tr>
+</tbody>
+</table>
+<h3>Examples</h3>
+<p>@agent</p>
+<pre><code class="language-python">from progress.observability import agent
+
+@agent(name=&quot;support-agent&quot;)
+async def handle_support_request(message: str):
+    # Agent logic with LLM calls, tool usage, and so on
+    return response
+</code></pre>
+<p>@workflow</p>
+<pre><code class="language-python">from progress.observability import workflow
+
+@workflow(name=&quot;onboarding-flow&quot;, version=2)
+async def onboard_customer(customer_id: str):
+    await verify_identity(customer_id)
+    await create_account(customer_id)
+    await send_welcome_email(customer_id)
+</code></pre>
+<p>@tool</p>
+<pre><code class="language-python">from progress.observability import tool
+
+@tool(name=&quot;web-search&quot;)
+def search_web(query: str) -&gt; str:
+    # Tool implementation
+    return results
+</code></pre>
+<p>@task</p>
+<pre><code class="language-python">from progress.observability import task
+
+@task(
+    name=&quot;custom-span-name&quot;,      # override the default function name
+    version=2,                     # version number for tracking
+    attributes={&quot;team&quot;: &quot;ml&quot;},     # custom span attributes
+    tags=[&quot;experiment-a&quot;]          # tags for filtering
+)
+def my_function():
+    ...
+</code></pre>
+<p>Decorators work with both synchronous and asynchronous functions. On success, the decorator sets the span status to OK. On exception, the decorator sets the status to ERROR, records the exception on the span, and re-raises it.</p>
+<h2>Tags</h2>
+<p>Tags are user-defined strings (max 200 characters each) that you attach to spans for filtering and grouping in the platform. There are three ways to add tags:</p>
+<h3>1. Global Tags</h3>
+<p>Applied to every span. Set during initialization:</p>
+<pre><code class="language-python">Observability.instrument(
+    app_name=&quot;my-app&quot;,
+    api_key=&quot;&lt;your-api-key&gt;&quot;,
+    additional_tags=[&quot;production&quot;, &quot;release:2.4.1&quot;]
+)
+</code></pre>
+<h3>2. Scoped Tags</h3>
+<p>Applied to all spans created within a context block:</p>
+<pre><code class="language-python">from progress.observability import propagate_attributes
+
+with propagate_attributes(tags=[&quot;tenant:acme&quot;, &quot;experiment-v2&quot;]):
+    # All spans created inside this block inherit these tags
+    my_agent_function()
+
+# Nesting is supported — tags accumulate
+with propagate_attributes(tags=[&quot;outer-tag&quot;]):
+    with propagate_attributes(tags=[&quot;inner-tag&quot;]):
+        do_work()  # span gets both &quot;outer-tag&quot; and &quot;inner-tag&quot;
+</code></pre>
+<h3>3. Decorator Tags</h3>
+<p>Applied to a single decorated function:</p>
+<pre><code class="language-python">from progress.observability import task
+
+@task(tags=[&quot;cohort-a&quot;])
+def my_task():
+    ...
+</code></pre>
+<p>All three levels merge automatically. If the same tag appears at multiple levels it is deduplicated.</p>
+<h2>Supported Instruments</h2>
+<h3>LLM Providers</h3>
+<p><code>OPENAI</code>, <code>GOOGLE_GENERATIVEAI</code>, <code>ANTHROPIC</code>, <code>BEDROCK</code>, <code>OLLAMA</code>, and others.</p>
+<h3>Agent Frameworks</h3>
+<p><code>LANGCHAIN</code>, <code>LLAMA_INDEX</code>, <code>HAYSTACK</code>, and others.</p>
+<blockquote>
+<p><strong>LangChain and LlamaIndex need the full package installed.</strong> Framework
+instrumentation activates only when the <code>langchain</code> (or <code>langgraph</code>) /
+<code>llama-index</code> distribution is installed. An app that depends only on
+<code>langchain-core</code> or <code>llama-index-core</code> runs fine and emits LLM spans, but no
+chain or index structure — silently. Add the full package alongside the
+<code>-core</code> package, never in place of it.</p>
+</blockquote>
+<h3>Controlling Instruments</h3>
+<pre><code class="language-python">from progress.observability import Observability, ObservabilityInstruments
+
+# Enable everything except OpenAI
+Observability.instrument(
+    app_name=&quot;my-app&quot;,
+    api_key=&quot;&lt;your-api-key&gt;&quot;,
+    block_instruments={ObservabilityInstruments.OPENAI}
+)
+</code></pre>
+<blockquote>
+<p>To specifically enable or block Google GenAI instrumentation, use the enum value <code>ObservabilityInstruments.GOOGLE_GENERATIVEAI</code>.</p>
+</blockquote>
+<h2>Shutdown</h2>
+<p>Call <code>shutdown()</code> before your process exits to flush any pending telemetry:</p>
+<pre><code class="language-python"># Call shutdown before your process exits
+# Using try/finally ensures telemetry is flushed even on errors
+try:
+    # your application logic
+    run_agent()
+finally:
+    Observability.shutdown()
+</code></pre>
+<h2>See Also</h2>
+<ul>
+<li><a href="core-concepts.html">Understand traces, spans, and evaluations</a></li>
+<li><a href="troubleshooting.html">Resolve Python telemetry issues</a></li>
+<li><a href="mcp.html">Connect AI clients with the MCP server</a></li>
+<li><a href="getting-started.html">Get started with platform setup</a></li>
+</ul>
+<p><a id="existing-otel"></a></p>
+<h2>Using Progress Alongside Existing OpenTelemetry</h2>
+<p>If your app calls <code>trace.set_tracer_provider(...)</code> itself, run <code>instrument()</code>
+<strong>after</strong> that line. This is the one case where init at process start is wrong.</p>
+<pre><code class="language-python">provider = TracerProvider(
+    resource=Resource.create({&quot;service.name&quot;: &quot;my-service&quot;})
+)
+provider.add_span_processor(BatchSpanProcessor(my_exporter))
+trace.set_tracer_provider(provider)     # the app's own setup, untouched
+
+Observability.instrument(               # after, never before
+    app_name=os.environ.get(&quot;OBSERVABILITY_APP_NAME&quot;, &quot;my-app&quot;),
+    api_key=os.environ[&quot;OBSERVABILITY_API_KEY&quot;],
+)
+</code></pre>
+<p>App provider first, then <code>instrument()</code>: Progress attaches to the existing
+provider and both exporters receive every span. Init first: the app's
+<code>set_tracer_provider()</code> becomes a no-op — OpenTelemetry logs <code>Overriding of
+current TracerProvider is not allowed</code> and the app's own exporter receives
+nothing for the rest of the process, while Progress traces keep arriving.</p>
+<p>Two consequences once attached: spans carry the app's resource, so they land
+under the app's <code>service.name</code> rather than <code>app_name</code>; and the app's own
+<code>provider.shutdown()</code> already flushes Progress, so an extra
+<code>Observability.shutdown()</code> is harmless but unnecessary.</p>
+<h2>Requirements</h2>
+<ul>
+<li>Python &gt;= 3.10, &lt; 4.0</li>
+<li><code>httpx</code> installed alongside the package (see Installation)</li>
+</ul>
+<footer>Preview build · unlisted · content derives from the official documentation with review fixes applied.</footer>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){
+  var tabs=[].slice.call(t.querySelectorAll(':scope > .tab'));
+  if(!tabs.length)return;
+  var bar=document.createElement('div');bar.className='tabbar';
+  tabs.forEach(function(p,i){
+    var b=document.createElement('button');b.textContent=p.dataset.title||('Tab '+(i+1));
+    b.onclick=function(){tabs.forEach(function(q){q.classList.remove('on')});
+      bar.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+      p.classList.add('on');b.classList.add('on');};
+    bar.appendChild(b);if(i===0){p.classList.add('on');b.classList.add('on');}
+  });
+  t.insertBefore(bar,t.firstChild);
+});
+</script>
+</body></html>
